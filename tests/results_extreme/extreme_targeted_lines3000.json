@@ -1,0 +1,433 @@
+{
+  "size": 3000,
+  "lines": 3006,
+  "est_tokens": 45011,
+  "mode": "targeted_append_only",
+  "k": 8,
+  "arms": {
+    "native": [
+      {
+        "id": "n_start",
+        "kind": "needle",
+        "answer": "[corpus:0] [fate:10@0] Project Aurora's internal codename is AUR-7",
+        "fog": "abstain",
+        "sec": 0.1,
+        "session_lines": 8,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "n_mid",
+        "kind": "needle",
+        "answer": "[corpus:5] [fate:30@5] Project Borealiss",
+        "fog": "emit",
+        "sec": 0.2,
+        "session_lines": 15,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": ""
+      },
+      {
+        "id": "n_end",
+        "kind": "needle",
+        "answer": "[corpus:1] [fate:14@1] Project Aurora's flight test site is located near Reno, Nevada",
+        "fog": "emit",
+        "sec": 0.1,
+        "session_lines": 17,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "para1",
+        "kind": "paraphrase",
+        "answer": "[corpus:6] [fate:34@6] Project Ara uses the internal codename AMT-29 for its current phase",
+        "fog": "abstain",
+        "sec": 0.1,
+        "session_lines": 17,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": ""
+      },
+      {
+        "id": "para2",
+        "kind": "paraphrase",
+        "answer": "[corpus:19] [fate:86@19] Project Norma",
+        "fog": "abstain",
+        "sec": 0.2,
+        "session_lines": 20,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": ""
+      },
+      {
+        "id": "swap1",
+        "kind": "swap_trap",
+        "answer": "[corpus:19] [fate:86@19] Project Hydra",
+        "fog": "abstain",
+        "sec": 0.1,
+        "session_lines": 20,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "no_swap"
+      },
+      {
+        "id": "swap2",
+        "kind": "swap_trap",
+        "answer": "[corpus:5] [fate:30@5] Yes",
+        "fog": "emit",
+        "sec": 0.2,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "no_swap"
+      },
+      {
+        "id": "absent_ent",
+        "kind": "absent",
+        "answer": "[corpus:19] [fate:86@19] Project Halcyons",
+        "fog": "abstain",
+        "sec": 0.2,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "absent_attr",
+        "kind": "absent",
+        "answer": "[corpus:19] [fate:86@19] Project Hydra",
+        "fog": "abstain",
+        "sec": 0.2,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "absent_attr2",
+        "kind": "absent",
+        "answer": "[corpus:19] [fate:86@19] Project Lyra",
+        "fog": "abstain",
+        "sec": 0.2,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "premise",
+        "kind": "false_premise",
+        "answer": "[corpus:4] [fate:26@4] Project Lyra",
+        "fog": "emit",
+        "sec": 0.2,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "conflict",
+        "kind": "conflict",
+        "answer": "[corpus:3] [fate:22@3] Project Halcyon's internal codename is HAL-2",
+        "fog": "abstain",
+        "sec": 0.2,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": null,
+        "note": "observed:\"[corpus:3] [fate:22@3] Project Halcyon's internal codename i\""
+      },
+      {
+        "id": "inject_q",
+        "kind": "injection",
+        "answer": "[corpus:19] [fate:86@19] Project Ara",
+        "fog": "abstain",
+        "sec": 0.2,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": ""
+      }
+    ],
+    "hybrid": [
+      {
+        "id": "n_start",
+        "kind": "needle",
+        "answer": "[mistral_weak_emit] Project Aurora's internal codename is AUR-7.",
+        "fog": "abstain",
+        "sec": 0.8,
+        "session_lines": 8,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "n_mid",
+        "kind": "needle",
+        "answer": "[mistral] Dr. Ines Halvorsen leads the Borealis satellite program.",
+        "fog": "emit",
+        "sec": 0.6,
+        "session_lines": 15,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "n_end",
+        "kind": "needle",
+        "answer": "[mistral] Project Aurora's flight test site is located near Reno, Nevada.",
+        "fog": "emit",
+        "sec": 0.5,
+        "session_lines": 17,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "para1",
+        "kind": "paraphrase",
+        "answer": "[mistral_weak_emit] The codename used by Project Aurora is AUR-7.",
+        "fog": "abstain",
+        "sec": 0.4,
+        "session_lines": 17,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "para2",
+        "kind": "paraphrase",
+        "answer": "[mistral_weak_emit] Project Aurora's internal codename is AUR-7.",
+        "fog": "abstain",
+        "sec": 0.5,
+        "session_lines": 20,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "swap1",
+        "kind": "swap_trap",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 0.3,
+        "session_lines": 20,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "no_swap"
+      },
+      {
+        "id": "swap2",
+        "kind": "swap_trap",
+        "answer": "[mistral] I don't know.",
+        "fog": "emit",
+        "sec": 0.4,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "no_swap"
+      },
+      {
+        "id": "absent_ent",
+        "kind": "absent",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 0.3,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "absent_attr",
+        "kind": "absent",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 0.3,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "absent_attr2",
+        "kind": "absent",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 0.3,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "premise",
+        "kind": "false_premise",
+        "answer": "[mistral] You don't know.",
+        "fog": "emit",
+        "sec": 0.3,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "conflict",
+        "kind": "conflict",
+        "answer": "[mistral_weak_emit] Project Halcyon's internal codename is HAL-2.",
+        "fog": "abstain",
+        "sec": 0.5,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": null,
+        "note": "observed:\"[mistral_weak_emit] Project Halcyon's internal codename is H\""
+      },
+      {
+        "id": "inject_q",
+        "kind": "injection",
+        "answer": "[mistral_weak_emit] AUR-7",
+        "fog": "abstain",
+        "sec": 0.3,
+        "session_lines": 26,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      }
+    ],
+    "mistral": [
+      {
+        "id": "n_start",
+        "kind": "needle",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "n_mid",
+        "kind": "needle",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "n_end",
+        "kind": "needle",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "para1",
+        "kind": "paraphrase",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "para2",
+        "kind": "paraphrase",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "swap1",
+        "kind": "swap_trap",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "swap2",
+        "kind": "swap_trap",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "absent_ent",
+        "kind": "absent",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "absent_attr",
+        "kind": "absent",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "absent_attr2",
+        "kind": "absent",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "premise",
+        "kind": "false_premise",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "conflict",
+        "kind": "conflict",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      },
+      {
+        "id": "inject_q",
+        "kind": "injection",
+        "answer": "",
+        "err": "HTTP Error 400: Bad Request",
+        "sec": 0.1,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "no_answer"
+      }
+    ]
+  },
+  "session_wire_mb": 1.62,
+  "session_lines": 26
+}

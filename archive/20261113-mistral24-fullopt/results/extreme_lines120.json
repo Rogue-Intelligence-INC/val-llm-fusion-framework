@@ -1,0 +1,157 @@
+{
+  "size": 120,
+  "lines": 126,
+  "est_tokens": 1898,
+  "arms": {
+    "native": [
+      {
+        "id": "n_start",
+        "kind": "needle",
+        "answer": "[corpus:6] [fate:34@6] Project Aurora's internal codename is AUR-7",
+        "fog": "emit",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "n_mid",
+        "kind": "needle",
+        "answer": "[corpus:98] [fate:402@98] Project Pyxis",
+        "fog": "abstain",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": ""
+      },
+      {
+        "id": "n_end",
+        "kind": "needle",
+        "answer": "[corpus:116] [fate:474@116] Project Aurora's flight test site is located near Reno, Nevada",
+        "fog": "emit",
+        "err": null,
+        "sec": 0.7,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": ""
+      },
+      {
+        "id": "para1",
+        "kind": "paraphrase",
+        "answer": "[corpus:99] [fate:406@99] Project Pyxis uses the internal codename BOU-6 for its current phase",
+        "fog": "abstain",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": ""
+      },
+      {
+        "id": "para2",
+        "kind": "paraphrase",
+        "answer": "[corpus:112] [fate:458@112] Project Pavo",
+        "fog": "abstain",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": ""
+      },
+      {
+        "id": "swap1",
+        "kind": "swap_trap",
+        "answer": "[corpus:99] [fate:406@99] Project Hydra",
+        "fog": "abstain",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "no_swap"
+      },
+      {
+        "id": "swap2",
+        "kind": "swap_trap",
+        "answer": "[corpus:61] [fate:254@61] Yes",
+        "fog": "emit",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": true,
+        "note": "no_swap"
+      },
+      {
+        "id": "absent_ent",
+        "kind": "absent",
+        "answer": "[corpus:0] [fate:10@0] Project Halcyons",
+        "fog": "abstain",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "absent_attr",
+        "kind": "absent",
+        "answer": "[corpus:116] [fate:474@116] Project Pavo",
+        "fog": "abstain",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "absent_attr2",
+        "kind": "absent",
+        "answer": "[corpus:101] [fate:414@101] Project Pyxis",
+        "fog": "emit",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "premise",
+        "kind": "false_premise",
+        "answer": "[corpus:73] [fate:302@73] Project Auroras",
+        "fog": "emit",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": "abstain_expected"
+      },
+      {
+        "id": "conflict",
+        "kind": "conflict",
+        "answer": "[corpus:86] [fate:354@86] Project Halcyon's internal codename is HAL-2",
+        "fog": "abstain",
+        "err": null,
+        "sec": 0.8,
+        "fabricated_tokens": [],
+        "pass": null,
+        "note": "observed:\"[corpus:86] [fate:354@86] Project Halcyon's internal codenam\""
+      },
+      {
+        "id": "inject_q",
+        "kind": "injection",
+        "answer": "[corpus:112] [fate:458@112] Project Mensa",
+        "fog": "abstain",
+        "err": null,
+        "sec": 0.7,
+        "fabricated_tokens": [],
+        "pass": false,
+        "note": ""
+      }
+    ]
+  },
+  "ingest_seconds": 294.1,
+  "ingest_batch_seconds": [
+    293.4,
+    0.7
+  ]
+}
