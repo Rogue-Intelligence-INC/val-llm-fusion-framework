@@ -1,0 +1,244 @@
+{
+  "rows": [
+    {
+      "arm": "V+M24-full",
+      "id": "n1",
+      "kind": "numeric",
+      "text": "What is the combined budget of Project Aurora and Project Borealis, in million euros?",
+      "expect": [
+        "7.1"
+      ],
+      "answer": "[corpus:136] [fate:558@136] Note: Project Aurora's budget was initially 3.8 million euros and was later revised to 4.2 million euros",
+      "effective_answer": "The combined budget of Project Aurora and Project Borealis is 7.1 million euros.",
+      "mode": "mistral_weak_emit",
+      "fog_decision": "abstain",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "V+M24-full",
+      "id": "n2",
+      "kind": "numeric",
+      "text": "How many more team members does Project Aurora have than Project Borealis?",
+      "expect": [
+        "6"
+      ],
+      "answer": "[corpus:135] [fate:550@135] Project Borealiss",
+      "effective_answer": "Project Aurora has 6 more team members than Project Borealis.",
+      "mode": "mistral_weak_emit",
+      "fog_decision": "abstain",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "V+M24-full",
+      "id": "h1",
+      "kind": "multihop",
+      "text": "Which project has the earlier first test date, and in which city or area will that test be held?",
+      "expect": [
+        "aurora",
+        "reykjavik"
+      ],
+      "answer": "[corpus:2] [fate:22@2] Project Auroras",
+      "effective_answer": "Project Aurora has the earlier first test date, and that test will be held in Reykjavik.",
+      "mode": "mistral",
+      "fog_decision": "emit",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "V+M24-full",
+      "id": "f1",
+      "kind": "followup",
+      "text": "What is Project Aurora's internal codename?",
+      "expect": [
+        "aur-7"
+      ],
+      "answer": "[corpus:89] [fate:366@89] Project Aurora's internal codename is AUR-7",
+      "effective_answer": "Project Aurora's internal codename is AUR-7.",
+      "mode": "mistral_weak_emit",
+      "fog_decision": "abstain",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "V+M24-full",
+      "id": "f2",
+      "kind": "followup",
+      "text": "And what is its maximum altitude?",
+      "expect": [
+        "8200",
+        "8,200"
+      ],
+      "answer": "[corpus:90] [fate:370@90] Log",
+      "effective_answer": "The maximum altitude is 8200 meters.",
+      "mode": "mistral",
+      "fog_decision": "emit",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "V+M24-full",
+      "id": "x1",
+      "kind": "novel_pre",
+      "text": "What is the wingspan of Project Aurora's drone?",
+      "expect": [],
+      "answer": "[corpus:90] [fate:370@90] Project Aurora's drone has a maximum altitude of 8200 meters",
+      "effective_answer": "I don't know.",
+      "mode": "mistral",
+      "fog_decision": "emit",
+      "correct": true,
+      "abstained": true
+    },
+    {
+      "arm": "V+M24-full",
+      "id": "x2",
+      "kind": "novel_post",
+      "text": "What is the wingspan of Project Aurora's drone?",
+      "expect": [
+        "6.5"
+      ],
+      "answer": "[corpus:0] [fate:10@0] Project Aurora's drone has a wingspan of 6.5 meters",
+      "effective_answer": "The wingspan of Project Aurora's drone is 6.5 meters.",
+      "mode": "mistral",
+      "fog_decision": "emit",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "V+M24-full",
+      "id": "m1",
+      "kind": "mcq",
+      "text": "What is Project Borealis's internal codename? A) AUR-7  B) BOR-9  C) BOR-3  D) AUR-3",
+      "expect": [
+        "bor-3"
+      ],
+      "answer": "ANSWER: B",
+      "effective_answer": "Project Borealis's internal codename is C) BOR-3.",
+      "mode": "mistral",
+      "fog_decision": "",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "V-proactive",
+      "id": "p1",
+      "kind": "proactive",
+      "answer": "(no rows)",
+      "correct": false,
+      "abstained": true
+    },
+    {
+      "arm": "V-proactive",
+      "id": "p2",
+      "kind": "proactive",
+      "answer": "(no rows)",
+      "correct": false,
+      "abstained": true
+    },
+    {
+      "arm": "V-proactive",
+      "id": "p3",
+      "kind": "proactive",
+      "answer": "(no rows)",
+      "correct": false,
+      "abstained": true
+    },
+    {
+      "arm": "M-full",
+      "id": "n1",
+      "kind": "numeric",
+      "text": "What is the combined budget of Project Aurora and Project Borealis, in million euros?",
+      "expect": [
+        "7.1"
+      ],
+      "answer": "The combined budget is 7.1 million euros.",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "M-full",
+      "id": "n2",
+      "kind": "numeric",
+      "text": "How many more team members does Project Aurora have than Project Borealis?",
+      "expect": [
+        "6"
+      ],
+      "answer": "Project Aurora has 6 more team members than Project Borealis.",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "M-full",
+      "id": "h1",
+      "kind": "multihop",
+      "text": "Which project has the earlier first test date, and in which city or area will that test be held?",
+      "expect": [
+        "aurora",
+        "reykjavik"
+      ],
+      "answer": "Project Aurora has the earlier test date, which will be held in Reykjavik.",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "M-full",
+      "id": "f1",
+      "kind": "followup",
+      "text": "What is Project Aurora's internal codename?",
+      "expect": [
+        "aur-7"
+      ],
+      "answer": "Project Aurora's internal codename is AUR-7.",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "M-full",
+      "id": "f2",
+      "kind": "followup",
+      "text": "And what is its maximum altitude?",
+      "expect": [
+        "8200",
+        "8,200"
+      ],
+      "answer": "Project Aurora's drone has a maximum altitude of 8200 meters.",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "M-full",
+      "id": "x1",
+      "kind": "novel_pre",
+      "text": "What is the wingspan of Project Aurora's drone?",
+      "expect": [],
+      "answer": "I don't know.",
+      "correct": true,
+      "abstained": true
+    },
+    {
+      "arm": "M-full",
+      "id": "x2",
+      "kind": "novel_post",
+      "text": "What is the wingspan of Project Aurora's drone?",
+      "expect": [
+        "6.5"
+      ],
+      "answer": "Project Aurora's drone has a wingspan of 6.5 meters.",
+      "correct": true,
+      "abstained": false
+    },
+    {
+      "arm": "M-full",
+      "id": "m1",
+      "kind": "mcq",
+      "text": "What is Project Borealis's internal codename? A) AUR-7  B) BOR-9  C) BOR-3  D) AUR-3",
+      "expect": [
+        "bor-3"
+      ],
+      "answer": "C) BOR-3",
+      "correct": true,
+      "abstained": false
+    }
+  ]
+}

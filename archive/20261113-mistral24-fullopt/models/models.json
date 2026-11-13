@@ -1,0 +1,64 @@
+{
+  "valhalla-fused-v1": {
+    "base_model": "C:\\Ai\\models\\Qwen2.5-0.5B-Instruct",
+    "strength": 0.08,
+    "created": "2026-11-13T08:23:14.553143+00:00",
+    "endpoint": "/v1/models/valhalla-fused-v1/chat/completions",
+    "vault_sha256": "adc80826d888e528190c7b5affb65b6a63dd9ef56f73fcf5b15c1e0e0cb7dd1f",
+    "manifest": {
+      "model_fate": {
+        "protocol": "valhalla-model-decompose-v1",
+        "base_model": "C:\\Ai\\models\\Qwen2.5-0.5B-Instruct",
+        "adaptation_rounds": 5,
+        "stopped_reason": "fate_converged",
+        "decompose_score": 0.8117,
+        "aggregate_score": 0.21231852869887236,
+        "model_closure_score": 0.6843333333333332
+      },
+      "free_multimodal": {
+        "protocol": "valhalla-free-multimodal-fusion-v2",
+        "samples_fed": 4,
+        "rounds_per_sample": 4,
+        "closure_rounds": 8,
+        "aggregate_score": 0.3875
+      },
+      "bake": {
+        "strength": 0.08,
+        "weight_delta_norm": 0.5986649990081787
+      }
+    }
+  },
+  "unified-core-v1": {
+    "base_model": "C:\\Ai\\models\\Qwen2.5-0.5B-Instruct",
+    "hf_name": "Qwen2.5-0.5B-Instruct-Unified-Core-v1-test-s0.08",
+    "protocol": "valhalla-unified-core-v1",
+    "strength": 0.08,
+    "created": "2026-11-13T08:31:43.924584+00:00",
+    "endpoint": "/v1/models/unified-core-v1/chat/completions",
+    "vault_sha256": "b39107c51aa5693d39c3e7f8e277e65cf7ade4431186ba629bb0909eef81e3ea",
+    "manifest": {
+      "model_fate": {
+        "protocol": "valhalla-model-decompose-v1",
+        "base_model": "C:\\Ai\\models\\Qwen2.5-0.5B-Instruct",
+        "adaptation_rounds": 5,
+        "stopped_reason": "fate_converged",
+        "decompose_score": 0.8117,
+        "aggregate_score": 0.21231852869887236,
+        "model_closure_score": 0.6843333333333332
+      },
+      "free_multimodal": {
+        "protocol": "valhalla-free-multimodal-fusion-v3",
+        "samples_fed": 4,
+        "rounds_per_sample": 4,
+        "closure_rounds": 8,
+        "aggregate_score": 0.3875,
+        "layout": "non_isolated_single_session",
+        "tri_modal": true
+      },
+      "bake": {
+        "strength": 0.08,
+        "weight_delta_norm": 0.598665177822113
+      }
+    }
+  }
+}

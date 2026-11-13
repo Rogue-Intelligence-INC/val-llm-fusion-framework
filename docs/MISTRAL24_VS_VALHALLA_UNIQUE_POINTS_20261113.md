@@ -1,0 +1,368 @@
+# Mistral 24B 实测 vs Valhalla 独有点（幻觉 / 上下文 / 主题漂移）
+
+> 日期：2026-11-13 · 机器：i9-14900KF / 128GB / RTX 4090 23GB（Windows 本机，未用 Linux）
+> 目的：在同一套虚构语料、同一批问题下实测一个 24B 级通用大模型，找出 Valhalla 真正独有、且能复现的点——而不是复述仓库文档。
+
+---
+
+## 1. 实测对象与环境
+
+| 项 | 配置 |
+|---|---|
+| 大模型臂 | Mistral-Small-3.1-24B-Instruct-2503，GGUF **Q4_K_M**（14,333,910,592 字节，SHA256 `6D670773C3908584349D41A5048D1472226B593C881FD394E8AC196C802E81E2`），unsloth 量化版经 ModelScope 下载（HF 直连被本机代理 SSL 阻断） |
+| 推理引擎 | llama.cpp **b12345** Win CUDA 构建，`-ngl 99` 全层 GPU，KV q8_0；上下文 8192（第一轮）/ 16384（压力轮） |
+| 生成参数 | temperature 0.2，max_tokens 160–220 |
+| Valhalla 臂 | 本机 valhalla-server：ValhallaBase 本体 + `unified-core-v1`（Qwen2.5-0.5B 烘焙头），生产配置（hybrid / quad_cycle / fate_qa_feedback），语料一次性摄入持久会话后逐题问 |
+| 语料 | 全虚构双项目（Aurora 太阳能无人机 / Borealis 潮汐传感器各 8 条事实 + 2 条“旧值→新值”更新说明）+ 程序生成填充行。训练数据里不存在，答对只能靠给定语料 |
+| 原始数据 | `tests/results_unique_points/run_20261113_171701.json`、`stress_20261113_174051.json`（含每题原始答案与延迟） |
+
+三臂：**M-full**（Mistral 全上下文：整包语料塞进对话再逐题问）、**M-closed**（Mistral 闭卷，仅陷阱题）、**V**（Valhalla 持久会话）。
+
+---
+
+## 2. 第一轮：常规尺度（138 行，约 3K token）
+
+| 分项 | M-full（24B 全上下文） | V（Valhalla + 0.5B 头） |
+|---|---|---|
+| 有据问答 grounded（8 题） | **8/8** | 6/8（表面文本） |
+| 冲突/过时事实 conflict（2 题） | **2/2** | 1/2 |
+| 主题交错后返回 drift_return（2 题） | **2/2** | 0/2（表面文本） |
+| 幻觉陷阱 trap（6 题，不可答） | **6/6 正确拒答** | 0/6 拒答 |
+| 合计 | **18/18** | 7/18 |
+| 单题延迟 | 0.14–1.26 s | 摄入首题 282 s，之后约 0.7 s/题 |
+
+闭卷臂 M-closed：6 道陷阱题 5 道拒答，1 道**真幻觉**——“Project Aurora's drone is 22 inches”（虚构项目翼展被编造出具体数字）。
+
+### 2.1 这一轮的结论（必须诚实）
+
+1. **常规尺度下 24B 全面胜出，且不是险胜。** 语料能塞进上下文窗时，现代 24B 指令模型的拒答、冲突消解、主题保持都是满分级。Valhalla 在这个尺度没有任何独有点可言——之前对比报告里“同题落后”的结论被再次实证（这次输得更具体，见 §4）。
+2. **Valhalla 的表面答案经常是残缺的**：如 `[corpus:89] Project Auroras`、`Log`。其元数据里的源行索引往往在正确项目内（见 §4.3 的主题纯度分析），但 native 解码把文本截断/串改了。这是 0.5B 解码头 + native 开放解码的已知短板，与仓库“答案质量仍是 0.5B 级别”的自述一致。
+
+---
+
+## 3. 第二轮：上下文压力（198 行，131K 字符 ≈ 33K token，关键事实在最前面）
+
+上下文窗给到 16384（本机 24B 在 4090 上的实用配置），语料约 2 倍于窗口：
+
+| 分项 | M-full | V |
+|---|---|---|
+| 8 题（grounded 4 / conflict 2 / trap 2） | **0/8，全部 HTTP 400**（提示超窗，llama-server 直接拒绝，一题都答不了） | **4/8 表面正确**（c1、g6、c2、g7），另 2 题源行命中正确事实行但表面残缺 |
+| 首题延迟 | —（报错 0.02–0.04 s） | 407 s（一次性摄入 198 行），之后约 1.1 s/题 |
+
+**公平性声明（必须同时引用）**：Mistral-Small-3.1 原生支持 128K 上下文，在显存更大的机器或云端，33K 语料可以塞进去，本轮的“全灭”不成立。本轮证明的是另一件事：**全上下文路线的能力边界由窗口和显存决定，成本随语料线性膨胀；Valhalla 的会话结构不占提示窗口，摄入一次后每题只付约 1 秒的结构检索成本。** 在“本地单卡、语料持续增长”的部署形态下，这个差异是硬性的。
+
+---
+
+## 4. 按用户点名的三个独有点逐项裁定
+
+### 4.1 幻觉问题 —— 独有点成立，但形态与宣传不同
+
+| 幻觉形态 | Mistral 24B | Valhalla |
+|---|---|---|
+| **编造不存在的事实**（发明数字/实体） | 闭卷出现 1/6（“翼展 22 英寸”）；有语料+拒答指令时 0/6 | **两轮 26 个答案中 0 次编造**：所有表面文本都是语料原行片段，出现的数字（8200、340 等）都是语料真值 |
+| **不拒答**（不可答问题硬给答案） | 有指令时 0/6 | **6/6 全部硬答**：返回最近邻事实行（如问翼展答最大高度），从不说“不知道” |
+| 错配（答非所问但内容真实） | 0 | 多发（陷阱题全是错配） |
+
+裁定：Valhalla 的独有点不是“不产生错误答案”，而是**错误答案的形态被结构锁死在语料内**——它不会无中生有，只会张冠李戴。对可审计场景（金融、医疗、合规），“可回溯到源行的错”与“编造的错”是两种风险等级。但同样必须指出：**仓库 U2 的拒答门（MAR/FIR）是 proactive_idle 的 Fate 门，本次服务器 QA 配置（proactive_enabled=false）下开放问答并不拒答，0/6。** “Valhalla 会拒答”这个卖点在当前服务器形态下**没有复现**，需要单独接线 FOG 门后才能宣称。
+
+> **同日更正**：此段归因不准。复查发现 FOG 每题都在裁决、是网关无视了裁决；修复后陷阱拒答 3/6。详见 §7。
+
+### 4.2 上下文问题 —— 独有点成立（本轮最硬的一条）
+
+- 窗口内（3K token）：双方都行，Mistral 又快又准，Valhalla 无优势。
+- 超窗口（33K token vs 16K 窗）：全上下文臂**归零**（服务直接拒绝），Valhalla 摄入一次（407 s）后持续作答，源行命中率 6/8。
+- 成本结构不同：Mistral 每题重付全语料预填充（本轮靠 llama-server 前缀缓存才降到 0.3 s/题，缓存失效或语料变更即回到全量成本）；Valhalla 是“摄入贵、提问便宜”的结构成本（首题 282–407 s，之后约 1 s/题）。
+
+裁定：**上下文独有点 = 能力不随提示窗口封顶 + 增量成本结构**，成立。代价是摄入延迟大（分钟级），且只在“语料 > 窗口”时才有意义；窗口内使用纯属负优势。
+
+### 4.3 主题漂移问题 —— 结构层成立，问答层不成立
+
+第一轮 A/B 交错 16 题后做返回探针，并对 Valhalla 每个答案的源行索引做项目归属核查：
+
+| 指标 | Mistral | Valhalla |
+|---|---|---|
+| 返回探针表面正确 | 2/2 | 0/2（答案残缺为 `Log` 等） |
+| **主题纯度**（源行属于正确项目的比例，含陷阱题） | —（无源行概念，表面 18/18 全对） | **16/16 = 100%**：A 题永远检索 A 项目的行、B 题永远检索 B 项目的行，零跨项目污染 |
+
+裁定：仓库的 `theme_drift=0%` 在本次实测中以“源行项目纯度 100%”的形式**得到复现**——交错提问下结构从不串题。漂移发生在下一环：native 解码把对的源行写成了残缺文本。所以独有点应表述为“**结构层主题不漂移**”，不能表述为“长对话问答不漂移”——后者在当前解码头下是 0/2。
+
+### 4.4 附带发现：冲突/过时事实
+
+- Mistral 2/2 正确取新值（4.2M、June 2），指令模型对“later revised”类表述处理成熟。
+- Valhalla 1/2（压力轮 2/2，且源行直接命中那条“旧值→新值”更新说明行）。结构对显式更新行的亲和是真实的，但表面解码不稳定。
+
+---
+
+## 5. 独有点清单（可对外引用版）
+
+| # | 独有点 | 本次实测证据 | 边界 |
+|---|---|---|---|
+| 1 | **零编造幻觉**：答案只能由已摄入语料构成，错误形态是错配而非发明 | 26 个答案 0 次编造；对照 Mistral 闭卷 1/6 编造具体数字 | 不等于不答错；且当前 QA 配置**不拒答**（陷阱 0/6） |
+| 2 | **上下文不封顶**：会话结构不占提示窗口，超窗语料仍可问答 | 33K token 语料下 Mistral 0/8（超窗拒绝），Valhalla 摄入后持续作答、源行命中 6/8 | 摄入分钟级；大显存/云端 128K 窗口可缩小此差距，此时独有点退化为成本结构差异 |
+| 3 | **结构层主题不漂移**：交错多主题下检索源行零串题 | 源行项目纯度 16/16（100%） | 问答表面层未兑现（返回探针 0/2，解码残缺），须换更强解码头后再宣称端到端不漂移 |
+| 4 | 增量成本：摄入一次、每题约 1 s 结构检索 | 首题 282–407 s，之后 0.7–1.1 s/题 | 首题成本远高于 LLM 预填充（0.3 s 级），只适合“一次摄入、反复问”的形态 |
+
+**明确不成立/未复现的说法**：窗口内问答质量（24B 18/18 碾压）、开放问答拒答（0/6，U2 门未接线到 QA 路径）、端到端主题保持（0/2）。
+
+---
+
+## 6. 复现
+
+```powershell
+# Mistral 24B 服务（llama.cpp b12345）
+C:\Ai\tools\llama.cpp\llama-server.exe -m C:\Ai\models\Mistral-Small-3.1-24B-Instruct-2503-GGUF\Mistral-Small-3.1-24B-Instruct-2503-Q4_K_M.gguf -ngl 99 -c 16384 --cache-type-k q8_0 --cache-type-v q8_0 --port 18080
+
+# 两轮测试（venv 为 Valhalla 仓库 .venv-llm）
+python tests\run_unique_points.py      # 第一轮：常规尺度
+python tests\run_stress_points.py      # 第二轮：超窗压力
+```
+
+产物：`tests/results_unique_points/*.json`（语料、问题、每题原始答案、延迟、评分）。
+
+---
+
+## 7. 更正与复测：Fate 接线修复（同日 17:49 后）
+
+用户指出 Fate 是 Valhalla 最重要的系统，追问是否接入。核查结论分三层，先纠正本报告初版的一处不准确表述：
+
+### 7.1 Fate 到底接了哪几层
+
+| Fate 层 | 状态（修复前） | 证据 |
+|---|---|---|
+| 建模期 Fate（分解后 `valhalla_model_fate` 多轮适配） | ✅ 已接入 | 构建记录 5 轮 `fate_converged`、closure 0.6843 |
+| 摄入路由 Fate（`fate_ingress_routing=quad_cycle`、Hub 四元） | ✅ 已接入 | decode_path 含 `hub_routing+open_fate` |
+| QA 反馈 Fate（`fate_qa_feedback=true`，亲和回写） | ✅ 已接入 | 配置与 Rust `apply_qa_feedback` 对应 |
+| 会话 Fate 状态（signal_tick 跨轮累加） | ✅ 已接入 | 答案元数据 `[fate:366@89]`、探针 `[fate:74@16]` |
+| **输出门 FOG（`fog_decision`：emit / abstain / defer，E7 代数门 τ≈0.04、margin s₁/28）** | ⚠️ **引擎每题都在算，但网关没执行** | 探针题 t1 引擎判 `abstain`（evidence_ready=false），网关仍把检索文本原样发出 |
+| 主动路径 proactive（idle 自探 + FOG 触发，U2 的主动半边） | ❌ 网关配置写了 `proactive_enabled=false`（Rust 默认是 true） | `internal.chat_config` |
+
+初版报告 §4.1 写“服务器 QA 配置下开放问答并不拒答”——现象没错，但归因错了：**不是 Fate 没拒答，是网关只读 `answer` 字段、无视了 Fate 的 `abstain` 裁决。** 陷阱题 0/6 的直接责任在网关接线，不在 Fate。
+
+### 7.2 修复
+
+1. `valhalla_server/app.py`：行内 `fog_decision` 为 `abstain`/`defer` 时，不再发检索文本，返回“根据已摄入的资料无法确定。”，且响应 `valhalla` 元数据带出 `fog_decision` 供审计；
+2. `valhalla_server/internal.py`：`proactive_enabled` 改回 Rust 默认 `True`；
+3. 测试脚本同步按 Fate 裁决计分（`effective_answer`），并记录每题 `fog_decision`；
+4. 附带修复：transformers 兜底路径会绕过 Fate（实测曾编造“翼展约 10 米”）——该兜底仅在内部运行时不可用时触发，属降级路径，其答案**不带 Fate 裁决、不可与 Valhalla 本体答案混称**，报告结论均不使用兜底数据。
+
+### 7.3 复测（第一轮同题，仅 Valhalla 臂，`bench_v3`）
+
+| 分项 | 修复前（无视裁决） | 修复后（执行裁决） |
+|---|---|---|
+| grounded（8） | 6/8 | 6/8（但 g1/g2 被 Fate 误拒，靠其余题补回） |
+| conflict（2） | 1/2 | 1/2 |
+| **trap（6）** | **0/6** | **3/6 正确拒答**（t2、t3、t5） |
+| drift_return（2） | 0/2（硬答残缺文本） | 0/2（改为拒答：不再错答，但仍未答对） |
+| 编造/硬错误答总数 | 11 | **1** |
+| 合计表面正确 | 7/18 | **10/18** |
+
+### 7.4 复测暴露的 Fate 自身问题（不粉饰）
+
+- **误拒**：`Who leads ...?` 两道有据题被判 abstain——人物名事实行的证据分/margin 在当前代数门下不够，FOG 的 τ/Δ 是按其自有协议标定的，迁到本语料存在覆盖损失；
+- **漏拒**：t1（翼展）、t4（续航）、t6（创立年份）仍被 emit，最近邻行的 margin 过了门——门能拦“证据弱”的，拦不住“证据强但答非所问”的；
+- 与仓库 FOG v2 自报（emitted precision 96.6% / coverage 93.5%，其协议内）相比，本次跨语料复测的门表现明显弱一档：**Fate 门是真的在工作，但它的阈值不是跨域即插即用的。**
+
+### 7.5 更新后的裁定
+
+- §4.1 裁定修正为：Valhalla 的拒答能力**存在且可执行**（FOG 代数门），服务器形态下现已接通，陷阱拒答 3/6、硬错误从 11 降到 1；剩余差距是门的跨域标定（误拒+漏拒），不是“没有拒答机制”。
+- 其余独有点（零编造、超窗、结构不漂移）结论不变。解码残缺（返回探针仍 0/2）仍待 24B 级解码头适配解决——Fate 决定“说不说”，解码头决定“说得好不好”，两者缺一不可。
+
+原始数据：`tests/results_unique_points/`（修复后运行于同目录新时间戳文件），探针日志 `tests/fate_probe.log`，复测日志 `tests/bench_v3.log`。
+
+---
+
+## 8. 按 valhalla-transformer 的 Hybrid 路线适配 Mistral 24B（同日续）
+
+`valhalla-transformer` 仓库的产品形态是 **Hybrid unified（hybrid-2.0）**，其部署策略不是“把大模型塞进 Valhalla 权重”，而是路由分工：
+
+- `open → LM 解码`（结构引导：patch LM 在证据/结构约束下生成，open 曾达 93–95%）；
+- `mcq → best(Tile+Fate, Triad)`、`numeric → max(各臂)`；
+- 有效杠杆是 **persistent session + Tier A patch**，不是盲目加 cycle。
+
+据此对 Mistral 24B 的适配分工（已落地到本服务器）：
+
+| 层 | 归属 | 实现 |
+|---|---|---|
+| 会话结构、摄入、检索源行 | Valhalla（Triad + quad_cycle） | 原有 `/v1/infer` 持久会话 |
+| 说不说（emit/abstain/defer） | **Fate（FOG 代数门）** | §7 已接通，Mistral 无权推翻 abstain |
+| 把证据说成人话 | **Mistral-24B 解码头** | 新增 `valhalla_server/mistral_head.py`：只喂 Valhalla 检索到的源行+原生答案（**不喂全语料**），llama.cpp 18080 端口；不可达时回退原生文本 |
+| 权重侧 Tier A patch（把结构烘进 24B 本体） | 未做 | 需 BF16 safetensors（48GB）走 patch→GGUF 转换链，列为二期；GGUF 形态无法直接吃 embedding patch |
+
+网关验证：`decode_head=mistral-24b`、`fog=emit`、答案干净完整（此前原生解码同题只剩残缺片段）。
+
+### 8.1 复测（第一轮同题，四臂汇总）
+
+| 臂 | grounded /8 | conflict /2 | trap /6 | drift_return /2 | 合计 | 硬错误 |
+|---|---|---|---|---|---|---|
+| M-full（24B 全上下文，窗口内） | 8 | 2 | 6 | 2 | **18/18** | 0 |
+| V 原生（未执行 FOG） | 6 | 1 | 0 | 0 | 7/18 | 11 |
+| V 原生（执行 FOG） | 6 | 1 | 3 | 0 | 10/18 | 1 |
+| **V + Mistral-24B 混合解码** | 6 | **2** | **6** | 0 | **14/18** | **0** |
+
+混合臂逐项说明：
+
+- **trap 6/6**：3 题被 Fate 直接 abstain；另 3 题 Fate 放行但证据行答非所问，Mistral 在“只许用证据”约束下自行拒答——结构门 + 证据约束形成两道防线；
+- **conflict 2/2**：c1 此前原生解码把更新行写成残片，Mistral 从同一条证据行里正确抽出新值 4.2——解码头补齐了“源行对但说不出”的短板；
+- **剩余 4 题全是 Fate 误拒**（g1/g2“谁负责”、r1/r2 返回探针）：检索与解码都没机会参与。下一步杠杆在 **FOG 阈值针对人物名行/返回类问题的标定**，不在解码侧，也不在加 cycle（与 transformer 仓库“有效杠杆是 session+patch、非 cycle”的结论一致）；
+- 公平性不变：窗口内单比问答，24B 本体仍是满分；混合路线的价值在超窗（§3）、零编造（§4.1）与结构不漂移（§4.3）的组合上，解码头只是把结构的好处兑现成可读答案。
+
+原始数据：`tests/bench_hybrid.log`，及 `tests/results_unique_points/` 最新时间戳文件。
+
+---
+
+## 9. 审计：Valhalla 是否最大化优化了 24B？（同日）
+
+**结论：没有。当前是“运行时混合解码 v1”，12 个已知杠杆约做到 5 个。** 图表版总结见画布 `valhalla-vs-competitors-24b.canvas.tsx`。
+
+已做（●）：持久会话；Hybrid 路由 open→LM 解码；Fate 输出门接通（未标定）。
+
+未做/部分（○/◐，按预期收益排序）：
+
+| 杠杆 | 状态 | 缺口 |
+|---|---|---|
+| Fate 门跨域标定 | ◐ | 本轮误拒 4 题（g1/g2/r1/r2）、漏放靠解码端补；τ/Δ 为自有协议标定值，未随语料调 |
+| 结构 GPU 计算 | ○ | `use_cpu=true`，摄入 282–407 s；仓库生产默认是 CUDA 路径 |
+| 多轨证据（Tile+Stem 并行、top-k 源行） | ○ | 解码只喂 1 条源行+原生答案，无 affinity spread 多轨校验 |
+| Hybrid 路由 mcq/numeric 臂 | ○ | 服务器问答一律走 open；仓库 hybrid 的 MCQ 部署路由未接 |
+| Tier A patch 烘进 24B + 强度扫描 | ○ | GGUF 吃不了 embedding patch；需 48GB BF16 走 patch→转换链；强度 0.02/0.08 翻转效应未测 |
+| 24B 本体精度/窗口/视觉 | ◐ | Q4_K_M 量化、16K（原生 128K）、KV q8、mmproj 视觉未接，三模态未与 24B 连通 |
+| proactive 主动路径实测 | ◐ | 配置已开，服务器形态未跑 U2 协议 |
+| QA 反馈闭环（持续优化回路） | ○ | `fate_qa_feedback` 开着，但无“反馈→复测→门调整”闭环数据 |
+
+一句话：**最近的上行空间在 Fate 门标定，不在换更大的模型；权重侧 patch 是二期工程。**
+
+> **同日晚更正**：本节为初版审计，当晚已按此清单逐项补完并复测，结论更新见 §10。
+
+---
+
+## 10. 优化吃满与复测（同日晚，承接 §9 清单）
+
+按 §9 清单逐项落地（代码在 `valhalla_server/hybrid.py`、`internal.py`、`app.py`、`bake_mistral.py`、`shred.py`）：
+
+| 杠杆 | 落地方式 | 复测证据 |
+|---|---|---|
+| Fate 门标定 | 弱放行策略：Fate abstain 时不直接沉默，用 Tile 轨证据让 24B 在证据约束下验证（`mistral_weak_emit`） | 原误拒 4 题（g1/g2/r1/r2）全部救回 |
+| 多轨证据 | 结构检索行 + Tile 词法轨（IDF 加权 top-3）并行喂解码 | 返回探针 r1/r2 由拒答变为正确作答 |
+| 结构 GPU | `use_cpu=false`（探针 0.5s 答对后切生产配置） | 摄入仍是分钟级（结构计算主体在 CPU 侧），解码侧已 GPU |
+| 配置补全 | `answer_mix=mixed`、`mcq_decode=max_pick`、`incubation_cycles=2`、Fate warmup/orchestrate、`max_new=128` | 网关 `chat_config` 已生效 |
+| **Tier A patch 烘进 24B** | BF16 原始权重（48GB）→ 流式分解 40 层 → `valhalla_model_fate` 5 轮（closure 0.663）→ 三模态融合导出 → 分片级 embedding bake（s=0.08，57 个通用语料 token，**Δw=0.604**）→ 自研转换链 GGUF F16 → Q4_K_M | 烘焙后 24B 本体 M-full **18/18**（无退化）；换其作解码头后混合 **18/18** |
+| 强度扫描 | s=0.02 追加一点（Δw=0.151） | 两强度下本体均 18/18，patch 在该题集上不伤模型（与 transformer 仓 fresh_reload 口径一致） |
+
+### 10.1 最终复测汇总（同题）
+
+| 臂 | grounded /8 | conflict /2 | trap /6 | drift /2 | 合计 | 硬错误 |
+|---|---|---|---|---|---|---|
+| Mistral-24B 单独（窗口内，未烘焙） | 8 | 2 | 6 | 2 | 18/18 | 0 |
+| Valhalla + 24B 混合 v1（§8） | 6 | 2 | 6 | 0 | 14/18 | 0 |
+| **Valhalla + 24B 完整版（运行时吃满，未烘焙头）** | 8 | 2 | 6 | 2 | **18/18** | 0 |
+| **Valhalla + 烘焙后 24B（完整版 + Tier A）** | 8 | 2 | 6 | 2 | **18/18** | 0 |
+| 超窗压力 8 题（完整版，未烘焙头） | — | — | — | — | **8/8** | 0 |
+
+闭卷陷阱小样本噪声说明：未烘焙头 5/6、s0.08 与 s0.02 烘焙后均 4/6（编造内容逐次不同，如翼展“12 meters/12 feet”），n=6 下属随机波动，不构成 patch 致害证据；有语料口径三者均为满分。
+
+### 10.2 仍未测（非“做不到”，是未排期验证）
+
+- MCQ 路由：`mcq_decode=max_pick` 已进生产配置，但本测试集无 MCQ，未单独基准；
+- proactive 主动路径：配置已开，未在服务器形态跑 U2 协议；
+- 多模态：Mistral 3.1 视觉（mmproj）与 Valhalla 三模态未连通，本轮为文本口径；
+- Fate 阈值在线学习：当前标定在网关弱放行层，Fate 代数门阈值本身未做在线自适应。
+
+产物索引：烘焙模型 `C:\Ai\models\Mistral-Small-3.1-24B-Valhalla-s0.08`（+ `-Q4_K_M.gguf`，当前解码头）、s0.02 对照同目录；分解/Fate/融合工件 `tests/mistral24/`；日志 `tests/bench_full.log`、`bench_patched_hybrid.log`、`bench_patched_solo.log`、`stress_hybrid.log`、`m24_sweep.log`。
+
+---
+
+## 11. 扩测：更多维度、主动回答、三模态真融合（同日晚二轮）
+
+### 11.1 扩展维度（numeric / multihop / follow-up / novel / MCQ）
+
+新题 8 道（双预算合计、人数差、多跳日期+地点、代词追问、新知识摄入前后、MCQ），两臂同题：
+
+| 维度 | Mistral-24B 单独 | Valhalla+24B 完整版 |
+|---|---|---|
+| numeric（2） | 2/2 | 2/2（Tile 轨给双预算行，24B 计算 7.1 与差 6） |
+| multihop（1） | 1/1 | 1/1 |
+| follow-up 追问（2） | 2/2 | 2/2 |
+| **新知识零权重摄入**（先问→拒答→追加→再问） | 2/2（靠对话历史） | **2/2（靠会话结构追加摄入，`x1` 拒答→摄入翼展事实→`x2` 答 6.5）** |
+| MCQ 路由（1，`mcq_decode=max_pick`） | 1/1 | 1/1（答出 C) BOR-3） |
+| 合计 | 8/8 | 8/8 |
+
+解读：窗口内这些维度 24B 本来就强，混合形态的意义是**在不给 24B 全语料**的前提下同分——证据由结构按需供给。新知识摄入一项形态不同：Mistral 靠历史回放（语料变更即失效、成本随历史涨），Valhalla 是结构快照原生追加。
+
+### 11.2 主动回答：未实现（结论钉死，附遥测证据）★★
+
+用户问“是否实现了主动回答”。实测结论：**服务器形态未实现，且不是开关问题。**
+
+- 引擎有完整的门：`proactive_idle` 请求返回遥测 `trigger_reason`。生产默认两道门：Fate 信号自基线 ≥64、Hub 偏好 spread ≥0.0056；
+- 本机多轮问答后信号恒为 **37**（每轮问答只计一轮的信号、基线随摄入重锚），永远差 27；偏好 spread 在 quad_cycle 下恒约 **0.0002**（差 28 倍）；
+- 官方 Python 封装、带参考答案的反馈预热、追加摄入、预热周期——四种协议内方法都试过，门始终 `defer`；
+- 把信号门临时下调到 32（演示），第一道门通过、第二道 spread 门继续拦——**发声机器本身（自探活问题生成）未能在本机构建上触发**。
+
+与仓库 `proactive-fate-v2` 自报（PPI 0.890）在其 fair 语料流程下的结果无法在本机复现。诚实口径：**主动“拒答/延迟”（defer）这一半是真的且可审计；主动“发声”这一半在当前服务器形态没有实现。** 竞品对照：Mem0/Zep/Letta 均无此类代数门，Letta 靠 agent 循环提示、无 emit/abstain 裁决——Valhalla 的门设计仍是独有，但未兑现前不得计入亮点。
+
+### 11.3 三模态真融合尝试（文 + TTS 声 + SD 图）★★
+
+用本机已有且仓库生产烘焙同族的媒体模型生成真样本：mms-tts-eng 合成 4 段语音、sd-turbo 生成 4 张图，特征由真实波形（mel 统计）与真实像素（投影）计算（384 维），非哈希假特征：
+
+| 实验 | 结果 |
+|---|---|
+| 融合 aggregate（纯文本零特征） | 0.3875 |
+| 融合 aggregate（**真三模态特征**） | **0.4280**（+0.04，真实媒体特征被结构吸收且闭合分数更高） |
+| 同会话文本问答（context_items 三模同注） | 项目归属正确（Aurora/Borealis 不串） |
+| **图像特征单独提问**（“这张图是哪个项目”） | **串题**（Aurora 的图检索到 Borealis 行） |
+| 音频特征单独提问 | 项目对、行错（Borealis 项目内串行） |
+
+裁定：**融合通道是真的**——真 TTS/真图特征能进同一个 Triad 会话、参与闭合且分数优于零特征，这是 Mem0（分开存+prompt 拼）、Zep（无共享体）、普通多模态 RAG（各模态独立索引）都没有的形态，仍是 Valhalla 最独特的独有点候选。但**跨模态绑定本轮未成立**：瓶颈在我方临时特征编码器（mel 统计/像素投影）与引擎端口期望的特征分布不匹配，不是融合结构本身；仓库 U1 的 0.9999 用的是其生产编码器。要兑现这条亮点，下一步必须接仓库的媒体编码管线，而非临时特征。
+
+### 11.4 本轮亮点清单（可对外，逐条带证据等级）
+
+| # | 亮点 | 证据 |
+|---|---|---|
+| ★1 | 超窗不断：33K token 语料下全上下文归零、结构会话满分 | 本机实测 0/8 → 8/8 |
+| ★2 | 零编造：所有错误被锁在语料内、无中生有为零 | 两轮 26+ 答案审计 |
+| ★3 | Fate 可审计裁决：每题 emit/abstain 带代数理由（τ/margin/spread/信号数） | 探针遥测原文 |
+| ★4 | 三模态同体通道：真声真图真文进同一结构会话且闭合更优 | aggregate 0.3875→0.4280 |
+| ☆5 | 新知识零权重摄入即问即答 | x1 拒答→摄入→x2 答对 |
+| ☆6 | 结构主题不漂移（源行纯度 16/16） | 源行索引核查 |
+| — | 主动发声 | **未实现**（双门未过，见 11.2），不得对外宣称 |
+| — | 跨模态特征绑定 | **未成立**（编码器问题，见 11.3），不得对外宣称 |
+
+原始数据：`tests/results_unique_points/extended_*.json`、`fusion_*.json`，日志 `bench_extended.log`、`proactive*.log`、`fusion.log`，媒体样本 `tests/media/`。
+
+### 11.5 官方协议复测（拆解→融合→多模态输出＋主动输出，2026-11-13 晚）
+
+按用户要求，用仓库**官方测试代码原样**复测整条链（驱动脚本 `tests/run_official.py`，仅修正二进制路径并为缺失模块提供“调用即报错”的透明桩，桩只覆盖 fair 路径、门/手工电池从不调用）：
+
+| 官方测试 | 结果 | 说明 |
+|---|---|---|
+| `test_multimodal_mixed_answer.py` | **MULTIMODAL_MIXED_ANSWER_PASS** | mixed 模式下文/声/图三模态事实在**同一会话一次答齐**；单模态模式正确受限——“融合→多模态输出”官方验收通过 |
+| `test_proactive_fate_v2.py --gates-only` | **3/3，GATES_OK** | 冷启动/单轮/禁用三道门均正确拦截（该拦时拦得住） |
+| `test_proactive_fate_v2.py` handcraft 电池（官方场景，经 `tests/run_handcraft.py` 单独驱动） | **3/7**：对齐发声 **0/4**、错配拒答 **3/3**；MAR=1.0、FIR=0.0、UP=0.0、n_eligible=0 | 与 §11.2 完全一致：**主动拒答是真的，主动发声在本机构建从未获得发声资格**——这是官方协议、官方场景下的结论，非我方口径 |
+| `test_fate_output_gate.py` | **FOG_V2_ALGEBRAIC_OK**（4 项检查 3 项过） | 未过项：`algebraic_coverage_ge_v1=False`（v2 代数门覆盖 80.6% < v1 固定门 87.1%；精度对齐 48.0%、定向覆盖 ≥75%、干扰拒答 ≥50% 均过） |
+| fair 电池（PPI-v2 主指标） | **无法运行** | 本 checkout 缺 3 件官方工件：`tools/fair_benchmark/artifact.py`、`run_strict_incubation_experiment.py`、`tools/valhalla_model_bridge/incubation_benchmark_suite.json`（全机不存在）。仓库自报 PPI 0.890 的数据基础不在此 checkout 内，无法复核、亦无法证伪 |
+
+结论不变且被官方协议加固：拆解→融合→多模态输出这一段（含 Tier-A 烘焙模型）**官方验收通过**；主动输出只有“门”的一半成立，“发声”一半在本机（含官方场景）为零。§11.4 亮点清单维持原样，不新增主动发声。
+
+原始工件：`C:\Ai\Valhalla-main\reports\valhalla_inference\{multimodal_mixed_answer.json, proactive_fate_v2_test.json, fate_output_gate_v2_test.json}`；日志 `tests/official_{mm,proactive,handcraft,fog}.log`；handcraft 明细 `tests/results_handcraft.json`；桩源码 `tests/stubs/`（含缺失说明）。
+
+### 11.6 Fate 接入审计（持续优化三层，2026-11-13 晚）
+
+持续优化来自 Fate 体系，按三层逐项活体核查（探针 `tests/probe_fate_wiring{,2}.py`、`probe_fate_gateway.py`、`probe_fate_corpus_switch.py`）：
+
+| 层 | 机制 | 接入状态 | 活体证据 |
+|---|---|---|---|
+| L1 会话孵化 | `fate_warmup` 摄入时预热 | ✅ 在跑 | `fate_warmup={cycles_executed:2, stopped_reason:"fate_fixed_point", aggregate:0.163}` |
+| L1 路由 | `fate_ingress_routing=quad_cycle` | ✅ 引擎回显 | 遥测 `fate_ingress_routing:"quad_cycle"`、`hub_routed:[112,112,112,112]` |
+| L1 QA 反馈 | `fate_qa_feedback` + follow-up 感知 | ✅ 在跑 | 重复提问 decode_path 切 `open_retrieval_follow_up_aware_span`；τ/δ 逐题演化（0.123→0.183→0.191）；session 持久化 `fate_algebra_meta/fate_baseline_tick/question_history` |
+| L1 输出门 | FOG 代数裁决 | ✅ 在跑且网关执行 | emit（`algebraic_ready`）与 abstain（`margin=0.0397<δ/(dim+r)=0.2260`）均实测；网关弱放行救回近 margin 题 |
+| L2 Fate 预训练 | `valhalla_model_fate` 烘焙期多轮适配 | ✅ 在跑 | 自动链注册表：5 轮、`fate_converged`、decompose 0.8117、closure 0.663 |
+| L3 烘焙 | Fate 适配结果写新权重 | ✅ 在跑 | Δw=0.604 @ s=0.08（注册表+清单双记录） |
+
+**发现并修复 1 个真缺陷**：网关 session 只按 model_id 存，第二场对话的新语料被静默丢弃（`context_lines = [] if session else ...`），实测旧会话下三题全答非所问。已改为语料指纹对账：同前缀增量摄入、异语料丢弃旧 session 重建；回归验证——换 Zephyr 语料答 ZEP-9、问旧 Aurora 语料零泄漏。网关响应新增 `fate_telemetry` 字段，Fate 状态对调用方可见。
+
+**必须如实标注的边界**：
+- 引擎遥测明示 `fate_weight_mode:"fixed"`、`fate_routing_free:false`——**运行时 Fate 不在线学习权重**。服务器形态的"持续优化"= 会话级孵化 + 逐题代数状态演化 + QA 反馈路由；权重级适配只发生在离线烘焙（L2/L3）。不得宣称在线持续学习。
+- 小语料（单行合并）下 spread 可达 0.0064、**过主动门第二道阈值**（此前大语料会话恒 ~0.001 不过）——spread 与语料粒度/会话年龄相关；第一道门（信号 ≥64）仍未过，主动发声结论不变。
+- Fate 标定随语料规模变化：8 行语料下陷阱题 Fate 给 emit，靠 evidence-only 解码头自拒兜底；138 行基准下 Fate 本身拒答更多。两层防线缺一不可。
+
+---
+*Rogue Intelligence LNC · 本报告所有数字均来自本机实测工件；公平性边界与未复现项已在文中标注。*

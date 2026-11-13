@@ -1,0 +1,4 @@
+ValhallaBase primary protocol is valhalla-base-v1.
+Valhalla retrieves first, fuses structure, then writes the sentence.
+Hub Tile Stem run freely with Fate adaptation and no preset routing.
+A baked checkpoint is a new model; the base model stays unchanged.

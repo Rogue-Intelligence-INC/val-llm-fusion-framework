@@ -1,0 +1,94 @@
+{
+  "incubate": {
+    "text": {
+      "aggregate_score": 0.3875,
+      "closure_rounds": 8,
+      "protocol": "valhalla-free-multimodal-fusion-v3",
+      "report_keys": [
+        "cycle_trace",
+        "hub_prefs",
+        "hub_routed",
+        "hub_signals",
+        "mcq_fate_trace",
+        "mode",
+        "model_patch",
+        "optimize_cycles",
+        "stats",
+        "stem_cells",
+        "stem_connections",
+        "stem_dim",
+        "tile_completed",
+        "tile_dim",
+        "tile_ops"
+      ],
+      "tile_stem": {
+        "tile_count": null,
+        "stem_cell_count": null,
+        "hub_routed": [
+          768,
+          768,
+          768,
+          768
+        ]
+      }
+    },
+    "tri": {
+      "aggregate_score": 0.4279818647034536,
+      "closure_rounds": 8,
+      "protocol": "valhalla-free-multimodal-fusion-v3",
+      "report_keys": [
+        "cycle_trace",
+        "hub_prefs",
+        "hub_routed",
+        "hub_signals",
+        "mcq_fate_trace",
+        "mode",
+        "model_patch",
+        "optimize_cycles",
+        "stats",
+        "stem_cells",
+        "stem_connections",
+        "stem_dim",
+        "tile_completed",
+        "tile_dim",
+        "tile_ops"
+      ],
+      "tile_stem": {
+        "tile_count": null,
+        "stem_cell_count": null,
+        "hub_routed": [
+          768,
+          768,
+          768,
+          768
+        ]
+      }
+    }
+  },
+  "probes": [
+    {
+      "id": "mm1",
+      "kind": "text_q",
+      "answer": "[corpus:0] [fate:10@0] Project Aurora",
+      "idx": 0
+    },
+    {
+      "id": "mm2",
+      "kind": "text_q",
+      "answer": "[corpus:3] [fate:22@3] Project Borealis",
+      "idx": 3
+    },
+    {
+      "id": "mm3",
+      "kind": "image_q",
+      "answer": "[corpus:3] [fate:22@3] Project Borealis",
+      "idx": 3
+    },
+    {
+      "id": "mm4",
+      "kind": "audio_q",
+      "answer": "[corpus:3] [fate:22@3] Project Borealis",
+      "idx": 3
+    }
+  ]
+}

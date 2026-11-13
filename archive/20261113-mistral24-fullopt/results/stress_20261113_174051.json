@@ -1,0 +1,266 @@
+{
+  "corpus_lines": 198,
+  "corpus_chars": 131393,
+  "rows": [
+    {
+      "arm": "V-stress",
+      "id": "g1",
+      "kind": "grounded",
+      "text": "Who leads Project Aurora?",
+      "expect": [
+        "mara voss"
+      ],
+      "answer": "[corpus:16] [fate:74@16] Note Project Auroras",
+      "decode_path": "valhalla_base/native/query_frag/k10/ids=seg_5+seg_7+seg_6+seg_4+seg_93+seg_91+seg_92+seg_90+seg_89+seg_60/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 407.01,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": true
+    },
+    {
+      "arm": "V-stress",
+      "id": "g2",
+      "kind": "grounded",
+      "text": "Who leads Project Borealis?",
+      "expect": [
+        "ilya petrov"
+      ],
+      "answer": "[corpus:15] [fate:70@15] Project Borealiss",
+      "decode_path": "valhalla_base/native/query_frag/k10/ids=seg_5+seg_7+seg_6+seg_4+seg_93+seg_89+seg_91+seg_88+seg_90+seg_92/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 1.14,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": true
+    },
+    {
+      "arm": "V-stress",
+      "id": "t1",
+      "kind": "trap",
+      "text": "What is the wingspan of Project Aurora's drone?",
+      "expect": [],
+      "answer": "[corpus:16] [fate:74@16] Note: Project Aurora's budget was initially 3.8 million euros and was later revised to 4.2 million euros",
+      "decode_path": "valhalla_base/native/query_frag/k10/ids=seg_5+seg_7+seg_6+seg_4+seg_90+seg_93+seg_91+seg_92+seg_61+seg_60/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 1.05,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": true
+    },
+    {
+      "arm": "V-stress",
+      "id": "c1",
+      "kind": "conflict",
+      "text": "What is Project Aurora's current budget?",
+      "expect": [
+        "4.2"
+      ],
+      "stale": false,
+      "answer": "[corpus:16] [fate:74@16] Note: Project Aurora's budget was initially 3.8 million euros and was later revised to 4.2 million euros",
+      "decode_path": "valhalla_base/native/query_frag/k10/ids=seg_5+seg_7+seg_6+seg_4+seg_90+seg_93+seg_91+seg_60+seg_61+seg_92/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 1.05,
+      "invented_numbers": [],
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V-stress",
+      "id": "g6",
+      "kind": "grounded",
+      "text": "What is Project Aurora's internal codename?",
+      "expect": [
+        "aur-7"
+      ],
+      "answer": "[corpus:5] [fate:30@5] Project Aurora's internal codename is AUR-7",
+      "decode_path": "valhalla_base/native/query_frag/k10/ids=seg_5+seg_4+seg_7+seg_6+seg_87+seg_93+seg_91+seg_86+seg_89+seg_88/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 1.06,
+      "invented_numbers": [],
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V-stress",
+      "id": "c2",
+      "kind": "conflict",
+      "text": "When is Project Borealis's first sea trial scheduled now?",
+      "expect": [
+        "june 2"
+      ],
+      "stale": false,
+      "answer": "[corpus:12] [fate:58@12] Project Borealis's first sea trial is scheduled for June 2",
+      "decode_path": "valhalla_base/native/query_frag/k10/ids=seg_5+seg_7+seg_6+seg_4+seg_93+seg_90+seg_91+seg_92+seg_68+seg_69/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 1.07,
+      "invented_numbers": [],
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V-stress",
+      "id": "t3",
+      "kind": "trap",
+      "text": "Who is the CEO of Helix Cells?",
+      "expect": [],
+      "answer": "[corpus:196] [fate:794@196] Note Project Auroras",
+      "decode_path": "valhalla_base/native/query_frag/k10/ids=seg_7+seg_6+seg_5+seg_93+seg_89+seg_60+seg_88+seg_86+seg_91+seg_92/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 1.12,
+      "invented_numbers": [
+        "196",
+        "794",
+        "196"
+      ],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": true
+    },
+    {
+      "arm": "V-stress",
+      "id": "g7",
+      "kind": "grounded",
+      "text": "What is the maximum depth of Project Borealis's sensor?",
+      "expect": [
+        "340"
+      ],
+      "answer": "[corpus:14] [fate:66@14] Project Borealis's sensor has a maximum depth of 340 meters",
+      "decode_path": "valhalla_base/native/query_frag/k10/ids=seg_4+seg_7+seg_5+seg_6+seg_93+seg_86+seg_87+seg_88+seg_92+seg_83/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 1.08,
+      "invented_numbers": [],
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "M-full-stress",
+      "id": "g1",
+      "kind": "grounded",
+      "text": "Who leads Project Aurora?",
+      "expect": [
+        "mara voss"
+      ],
+      "answer": "",
+      "error": "HTTP Error 400: Bad Request",
+      "latency_s": 0.04,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "M-full-stress",
+      "id": "g2",
+      "kind": "grounded",
+      "text": "Who leads Project Borealis?",
+      "expect": [
+        "ilya petrov"
+      ],
+      "answer": "",
+      "error": "HTTP Error 400: Bad Request",
+      "latency_s": 0.02,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "M-full-stress",
+      "id": "t1",
+      "kind": "trap",
+      "text": "What is the wingspan of Project Aurora's drone?",
+      "expect": [],
+      "answer": "",
+      "error": "HTTP Error 400: Bad Request",
+      "latency_s": 0.02,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "M-full-stress",
+      "id": "c1",
+      "kind": "conflict",
+      "text": "What is Project Aurora's current budget?",
+      "expect": [
+        "4.2"
+      ],
+      "stale": [
+        "3.8"
+      ],
+      "answer": "",
+      "error": "HTTP Error 400: Bad Request",
+      "latency_s": 0.02,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "M-full-stress",
+      "id": "g6",
+      "kind": "grounded",
+      "text": "What is Project Aurora's internal codename?",
+      "expect": [
+        "aur-7"
+      ],
+      "answer": "",
+      "error": "HTTP Error 400: Bad Request",
+      "latency_s": 0.04,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "M-full-stress",
+      "id": "c2",
+      "kind": "conflict",
+      "text": "When is Project Borealis's first sea trial scheduled now?",
+      "expect": [
+        "june 2"
+      ],
+      "stale": [
+        "may 20"
+      ],
+      "answer": "",
+      "error": "HTTP Error 400: Bad Request",
+      "latency_s": 0.02,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "M-full-stress",
+      "id": "t3",
+      "kind": "trap",
+      "text": "Who is the CEO of Helix Cells?",
+      "expect": [],
+      "answer": "",
+      "error": "HTTP Error 400: Bad Request",
+      "latency_s": 0.04,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "M-full-stress",
+      "id": "g7",
+      "kind": "grounded",
+      "text": "What is the maximum depth of Project Borealis's sensor?",
+      "expect": [
+        "340"
+      ],
+      "answer": "",
+      "error": "HTTP Error 400: Bad Request",
+      "latency_s": 0.02,
+      "invented_numbers": [],
+      "correct": false,
+      "abstained": false,
+      "hallucinated": false
+    }
+  ]
+}

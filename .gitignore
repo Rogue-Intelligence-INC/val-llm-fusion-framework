@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+# Local runtime state: models, vault, jobs (GBs, machine-local paths)
+data/
+# Engine binaries / encrypted engines / decrypted cache
+runtime/.cache/
+runtime/*.exe
+runtime/*.enc
+# Logs and packaged archives (contents kept as plain files)
+*.log
+*.zip

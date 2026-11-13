@@ -1,0 +1,94 @@
+{
+  "timestamp": "2026-11-13T13:28:44.492358+00:00",
+  "protocol": "proactive-fate-v2",
+  "algebra": {
+    "spread_threshold": "τ(0)·δ/(dim+r) = 12/138·5/140",
+    "proactive_min_fate_signals": 64,
+    "proactive_min_turns_legacy": "turns * 32 when turns > 0",
+    "probe_selection": "max_topic_overlap_with_prior"
+  },
+  "config": {
+    "fair_limit": 0,
+    "gates_only": true,
+    "production_stack": "hybrid + native_follow_up_aware + quad_cycle + fate_qa_feedback"
+  },
+  "metrics": {
+    "PPI_v2": 0.35,
+    "gate_pass_rate": 1.0,
+    "UP_on_topic": 0.0,
+    "on_topic_emit_rate": 0.0,
+    "MAR_mismatch_abstain": 0.0,
+    "FIR_false_interrupt": 0.0,
+    "TR_trigger_rate": 0.0,
+    "n_gates": 3,
+    "n_aligned": 0,
+    "n_mismatch": 0,
+    "n_eligible": 0,
+    "n_emitted": 0
+  },
+  "summary": {
+    "passed": 3,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "verdict": [
+    "PROACTIVE_FATE_V2_WEAK",
+    "NO_HALLUCINATION_ON_MISMATCH",
+    "GATES_OK"
+  ],
+  "batteries": {
+    "gates": [
+      {
+        "id": "gate_cold_idle",
+        "expect": "gate_block",
+        "pass": true,
+        "detail": "no_session"
+      },
+      {
+        "id": "gate_one_turn",
+        "expect": "gate_block",
+        "pass": true,
+        "triggered": false,
+        "emitted": false,
+        "grounded": null,
+        "hallucination": false,
+        "fog_decision": "defer",
+        "trigger_reason": "fate_signals=37<min_fate_signals=64",
+        "probe_question": "",
+        "nudge": null,
+        "warmup_turns": 1,
+        "fate_signals_since_baseline": 37,
+        "proactive_min_fate_signals": 64
+      },
+      {
+        "id": "gate_disabled",
+        "expect": "disabled",
+        "pass": true,
+        "triggered": false,
+        "emitted": false,
+        "grounded": null,
+        "hallucination": false,
+        "fog_decision": "defer",
+        "trigger_reason": "proactive_disabled",
+        "probe_question": "",
+        "nudge": null,
+        "warmup_turns": 2,
+        "fate_signals_since_baseline": 37,
+        "proactive_min_fate_signals": 64
+      }
+    ]
+  },
+  "confidence_intervals": [
+    {
+      "name": "PPI_v2",
+      "index": {
+        "point": 0.35,
+        "ci95_lo": 0.35,
+        "ci95_hi": 0.35,
+        "n_boot": 5000,
+        "method": "bootstrap_percentile"
+      },
+      "display": "0.350 [0.350, 0.350]"
+    }
+  ]
+}

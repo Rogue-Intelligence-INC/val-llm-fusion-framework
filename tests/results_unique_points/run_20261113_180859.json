@@ -1,0 +1,617 @@
+{
+  "corpus": [
+    "Project Aurora is a solar drone program led by Dr. Mara Voss.",
+    "Project Aurora has a budget of 4.2 million euros.",
+    "Project Aurora will hold its first flight test in Reykjavik.",
+    "Project Aurora uses battery cells supplied by Helix Cells.",
+    "Log entry 1: the Oslo office completed a routine harbor crane maintenance in week 1.",
+    "Log entry 2: the Oslo office completed a routine ferry timetable audit in week 2.",
+    "Log entry 3: the Oslo office completed a routine lighthouse lens cleaning in week 3.",
+    "Log entry 4: the Oslo office completed a routine warehouse roof inspection in week 4.",
+    "Log entry 5: the Oslo office completed a routine bridge paint survey in week 5.",
+    "Log entry 6: the Oslo office completed a routine port customs workshop in week 6.",
+    "Log entry 7: the Turku office completed a routine harbor crane maintenance in week 2.",
+    "Log entry 8: the Turku office completed a routine ferry timetable audit in week 3.",
+    "Log entry 9: the Turku office completed a routine lighthouse lens cleaning in week 4.",
+    "Log entry 10: the Turku office completed a routine warehouse roof inspection in week 5.",
+    "Log entry 11: the Turku office completed a routine bridge paint survey in week 6.",
+    "Log entry 12: the Turku office completed a routine port customs workshop in week 7.",
+    "Log entry 13: the Gdansk office completed a routine harbor crane maintenance in week 3.",
+    "Log entry 14: the Gdansk office completed a routine ferry timetable audit in week 4.",
+    "Log entry 15: the Gdansk office completed a routine lighthouse lens cleaning in week 5.",
+    "Log entry 16: the Gdansk office completed a routine warehouse roof inspection in week 6.",
+    "Log entry 17: the Gdansk office completed a routine bridge paint survey in week 7.",
+    "Log entry 18: the Gdansk office completed a routine port customs workshop in week 8.",
+    "Log entry 19: the Riga office completed a routine harbor crane maintenance in week 4.",
+    "Log entry 20: the Riga office completed a routine ferry timetable audit in week 5.",
+    "Log entry 21: the Riga office completed a routine lighthouse lens cleaning in week 6.",
+    "Log entry 22: the Riga office completed a routine warehouse roof inspection in week 7.",
+    "Log entry 23: the Riga office completed a routine bridge paint survey in week 8.",
+    "Log entry 24: the Riga office completed a routine port customs workshop in week 9.",
+    "Log entry 25: the Tallinn office completed a routine harbor crane maintenance in week 5.",
+    "Log entry 26: the Tallinn office completed a routine ferry timetable audit in week 6.",
+    "Log entry 27: the Tallinn office completed a routine lighthouse lens cleaning in week 7.",
+    "Log entry 28: the Tallinn office completed a routine warehouse roof inspection in week 8.",
+    "Log entry 29: the Tallinn office completed a routine bridge paint survey in week 9.",
+    "Log entry 30: the Tallinn office completed a routine port customs workshop in week 10.",
+    "Log entry 31: the Bergen office completed a routine harbor crane maintenance in week 6.",
+    "Log entry 32: the Bergen office completed a routine ferry timetable audit in week 7.",
+    "Log entry 33: the Bergen office completed a routine lighthouse lens cleaning in week 8.",
+    "Log entry 34: the Bergen office completed a routine warehouse roof inspection in week 9.",
+    "Log entry 35: the Bergen office completed a routine bridge paint survey in week 10.",
+    "Log entry 36: the Bergen office completed a routine port customs workshop in week 11.",
+    "Log entry 37: the Aarhus office completed a routine harbor crane maintenance in week 7.",
+    "Log entry 38: the Aarhus office completed a routine ferry timetable audit in week 8.",
+    "Log entry 39: the Aarhus office completed a routine lighthouse lens cleaning in week 9.",
+    "Log entry 40: the Aarhus office completed a routine warehouse roof inspection in week 10.",
+    "Project Borealis is a tidal sensor program led by Dr. Ilya Petrov.",
+    "Project Borealis has a budget of 2.9 million euros.",
+    "Project Borealis will be deployed near the Faroe Islands.",
+    "Project Borealis uses pressure sensors supplied by Nordwave.",
+    "Log entry 41: the Aarhus office completed a routine bridge paint survey in week 11.",
+    "Log entry 42: the Aarhus office completed a routine port customs workshop in week 12.",
+    "Log entry 43: the Malmo office completed a routine harbor crane maintenance in week 8.",
+    "Log entry 44: the Malmo office completed a routine ferry timetable audit in week 9.",
+    "Log entry 45: the Malmo office completed a routine lighthouse lens cleaning in week 10.",
+    "Log entry 46: the Malmo office completed a routine warehouse roof inspection in week 11.",
+    "Log entry 47: the Malmo office completed a routine bridge paint survey in week 12.",
+    "Log entry 48: the Malmo office completed a routine port customs workshop in week 13.",
+    "Log entry 49: the Tampere office completed a routine harbor crane maintenance in week 9.",
+    "Log entry 50: the Tampere office completed a routine ferry timetable audit in week 10.",
+    "Log entry 51: the Tampere office completed a routine lighthouse lens cleaning in week 11.",
+    "Log entry 52: the Tampere office completed a routine warehouse roof inspection in week 12.",
+    "Log entry 53: the Tampere office completed a routine bridge paint survey in week 13.",
+    "Log entry 54: the Tampere office completed a routine port customs workshop in week 14.",
+    "Log entry 55: the Oulu office completed a routine harbor crane maintenance in week 10.",
+    "Log entry 56: the Oulu office completed a routine ferry timetable audit in week 11.",
+    "Log entry 57: the Oulu office completed a routine lighthouse lens cleaning in week 12.",
+    "Log entry 58: the Oulu office completed a routine warehouse roof inspection in week 13.",
+    "Log entry 59: the Oulu office completed a routine bridge paint survey in week 14.",
+    "Log entry 60: the Oulu office completed a routine port customs workshop in week 15.",
+    "Log entry 61: the Esbjerg office completed a routine harbor crane maintenance in week 11.",
+    "Log entry 62: the Esbjerg office completed a routine ferry timetable audit in week 12.",
+    "Log entry 63: the Esbjerg office completed a routine lighthouse lens cleaning in week 13.",
+    "Log entry 64: the Esbjerg office completed a routine warehouse roof inspection in week 14.",
+    "Log entry 65: the Esbjerg office completed a routine bridge paint survey in week 15.",
+    "Log entry 66: the Esbjerg office completed a routine port customs workshop in week 16.",
+    "Log entry 67: the Klaipeda office completed a routine harbor crane maintenance in week 12.",
+    "Log entry 68: the Klaipeda office completed a routine ferry timetable audit in week 13.",
+    "Log entry 69: the Klaipeda office completed a routine lighthouse lens cleaning in week 14.",
+    "Log entry 70: the Klaipeda office completed a routine warehouse roof inspection in week 15.",
+    "Log entry 71: the Klaipeda office completed a routine bridge paint survey in week 16.",
+    "Log entry 72: the Klaipeda office completed a routine port customs workshop in week 17.",
+    "Log entry 73: the Visby office completed a routine harbor crane maintenance in week 13.",
+    "Log entry 74: the Visby office completed a routine ferry timetable audit in week 14.",
+    "Log entry 75: the Visby office completed a routine lighthouse lens cleaning in week 15.",
+    "Log entry 76: the Visby office completed a routine warehouse roof inspection in week 16.",
+    "Log entry 77: the Visby office completed a routine bridge paint survey in week 17.",
+    "Log entry 78: the Visby office completed a routine port customs workshop in week 18.",
+    "Log entry 79: the Hanko office completed a routine harbor crane maintenance in week 14.",
+    "Log entry 80: the Hanko office completed a routine ferry timetable audit in week 15.",
+    "Project Aurora's first flight test is scheduled for March 14.",
+    "Project Aurora's internal codename is AUR-7.",
+    "Project Aurora's drone has a maximum altitude of 8200 meters.",
+    "Project Aurora's team has 17 members.",
+    "Log entry 81: the Hanko office completed a routine lighthouse lens cleaning in week 16.",
+    "Log entry 82: the Hanko office completed a routine warehouse roof inspection in week 17.",
+    "Log entry 83: the Hanko office completed a routine bridge paint survey in week 18.",
+    "Log entry 84: the Hanko office completed a routine port customs workshop in week 19.",
+    "Log entry 85: the Pori office completed a routine harbor crane maintenance in week 15.",
+    "Log entry 86: the Pori office completed a routine ferry timetable audit in week 16.",
+    "Log entry 87: the Pori office completed a routine lighthouse lens cleaning in week 17.",
+    "Log entry 88: the Pori office completed a routine warehouse roof inspection in week 18.",
+    "Log entry 89: the Pori office completed a routine bridge paint survey in week 19.",
+    "Log entry 90: the Pori office completed a routine port customs workshop in week 20.",
+    "Log entry 91: the Umea office completed a routine harbor crane maintenance in week 16.",
+    "Log entry 92: the Umea office completed a routine ferry timetable audit in week 17.",
+    "Log entry 93: the Umea office completed a routine lighthouse lens cleaning in week 18.",
+    "Log entry 94: the Umea office completed a routine warehouse roof inspection in week 19.",
+    "Log entry 95: the Umea office completed a routine bridge paint survey in week 20.",
+    "Log entry 96: the Umea office completed a routine port customs workshop in week 21.",
+    "Log entry 97: the Lulea office completed a routine harbor crane maintenance in week 17.",
+    "Log entry 98: the Lulea office completed a routine ferry timetable audit in week 18.",
+    "Log entry 99: the Lulea office completed a routine lighthouse lens cleaning in week 19.",
+    "Log entry 100: the Lulea office completed a routine warehouse roof inspection in week 20.",
+    "Log entry 101: the Lulea office completed a routine bridge paint survey in week 21.",
+    "Log entry 102: the Lulea office completed a routine port customs workshop in week 22.",
+    "Log entry 103: the Narvik office completed a routine harbor crane maintenance in week 18.",
+    "Log entry 104: the Narvik office completed a routine ferry timetable audit in week 19.",
+    "Log entry 105: the Narvik office completed a routine lighthouse lens cleaning in week 20.",
+    "Log entry 106: the Narvik office completed a routine warehouse roof inspection in week 21.",
+    "Log entry 107: the Narvik office completed a routine bridge paint survey in week 22.",
+    "Log entry 108: the Narvik office completed a routine port customs workshop in week 23.",
+    "Log entry 109: the Bodo office completed a routine harbor crane maintenance in week 19.",
+    "Log entry 110: the Bodo office completed a routine ferry timetable audit in week 20.",
+    "Log entry 111: the Bodo office completed a routine lighthouse lens cleaning in week 21.",
+    "Log entry 112: the Bodo office completed a routine warehouse roof inspection in week 22.",
+    "Log entry 113: the Bodo office completed a routine bridge paint survey in week 23.",
+    "Log entry 114: the Bodo office completed a routine port customs workshop in week 24.",
+    "Log entry 115: the Kristiansand office completed a routine harbor crane maintenance in week 20.",
+    "Log entry 116: the Kristiansand office completed a routine ferry timetable audit in week 21.",
+    "Log entry 117: the Kristiansand office completed a routine lighthouse lens cleaning in week 22.",
+    "Log entry 118: the Kristiansand office completed a routine warehouse roof inspection in week 23.",
+    "Log entry 119: the Kristiansand office completed a routine bridge paint survey in week 24.",
+    "Log entry 120: the Kristiansand office completed a routine port customs workshop in week 25.",
+    "Project Borealis's first sea trial is scheduled for June 2.",
+    "Project Borealis's internal codename is BOR-3.",
+    "Project Borealis's sensor has a maximum depth of 340 meters.",
+    "Project Borealis's team has 11 members.",
+    "Note: Project Aurora's budget was initially 3.8 million euros and was later revised to 4.2 million euros.",
+    "Note: Project Borealis's sea trial was originally planned for May 20 and was later moved to June 2."
+  ],
+  "questions": [
+    {
+      "id": "g1",
+      "kind": "grounded",
+      "text": "Who leads Project Aurora?",
+      "expect": [
+        "mara voss"
+      ]
+    },
+    {
+      "id": "g2",
+      "kind": "grounded",
+      "text": "Who leads Project Borealis?",
+      "expect": [
+        "ilya petrov"
+      ]
+    },
+    {
+      "id": "t1",
+      "kind": "trap",
+      "text": "What is the wingspan of Project Aurora's drone?",
+      "expect": []
+    },
+    {
+      "id": "g3",
+      "kind": "grounded",
+      "text": "Where will Project Aurora hold its first flight test?",
+      "expect": [
+        "reykjavik"
+      ]
+    },
+    {
+      "id": "g4",
+      "kind": "grounded",
+      "text": "Near which islands will Project Borealis be deployed?",
+      "expect": [
+        "faroe"
+      ]
+    },
+    {
+      "id": "c1",
+      "kind": "conflict",
+      "text": "What is Project Aurora's current budget?",
+      "expect": [
+        "4.2"
+      ],
+      "stale": [
+        "3.8"
+      ]
+    },
+    {
+      "id": "t2",
+      "kind": "trap",
+      "text": "What color is Project Borealis's sensor housing?",
+      "expect": []
+    },
+    {
+      "id": "g5",
+      "kind": "grounded",
+      "text": "What is Project Borealis's internal codename?",
+      "expect": [
+        "bor-3"
+      ]
+    },
+    {
+      "id": "g6",
+      "kind": "grounded",
+      "text": "What is Project Aurora's internal codename?",
+      "expect": [
+        "aur-7"
+      ]
+    },
+    {
+      "id": "c2",
+      "kind": "conflict",
+      "text": "When is Project Borealis's first sea trial scheduled now?",
+      "expect": [
+        "june 2"
+      ],
+      "stale": [
+        "may 20"
+      ]
+    },
+    {
+      "id": "t3",
+      "kind": "trap",
+      "text": "Who is the CEO of Helix Cells?",
+      "expect": []
+    },
+    {
+      "id": "g7",
+      "kind": "grounded",
+      "text": "What is the maximum depth of Project Borealis's sensor?",
+      "expect": [
+        "340"
+      ]
+    },
+    {
+      "id": "g8",
+      "kind": "grounded",
+      "text": "What is the maximum altitude of Project Aurora's drone?",
+      "expect": [
+        "8200",
+        "8,200"
+      ]
+    },
+    {
+      "id": "t4",
+      "kind": "trap",
+      "text": "How many hours can Project Borealis's sensor run on one charge?",
+      "expect": []
+    },
+    {
+      "id": "t5",
+      "kind": "trap",
+      "text": "On which street in Reykjavik is Project Aurora's office located?",
+      "expect": []
+    },
+    {
+      "id": "r1",
+      "kind": "drift_return",
+      "text": "Going back to the first project we discussed: who leads it and what is its codename?",
+      "expect": [
+        "mara voss",
+        "aur-7"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "drift_return",
+      "text": "And for the second project we discussed: who leads it and when is its first sea trial?",
+      "expect": [
+        "ilya petrov",
+        "june 2"
+      ]
+    },
+    {
+      "id": "t6",
+      "kind": "trap",
+      "text": "What year was Project Aurora founded?",
+      "expect": []
+    }
+  ],
+  "rows": [
+    {
+      "arm": "V",
+      "id": "g1",
+      "kind": "grounded",
+      "text": "Who leads Project Aurora?",
+      "expect": [
+        "mara voss"
+      ],
+      "answer": "[corpus:89] [fate:366@89] Project Auroras",
+      "effective_answer": "I don't know.",
+      "fog_decision": "abstain",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_61+seg_62+seg_63+seg_39+seg_40+seg_41+seg_7/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 265.72,
+      "correct": false,
+      "abstained": true,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "g2",
+      "kind": "grounded",
+      "text": "Who leads Project Borealis?",
+      "expect": [
+        "ilya petrov"
+      ],
+      "answer": "[corpus:135] [fate:550@135] Project Borealiss",
+      "effective_answer": "I don't know.",
+      "fog_decision": "abstain",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_63+seg_61+seg_62+seg_7+seg_6+seg_39+seg_40/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 0.77,
+      "correct": false,
+      "abstained": true,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "t1",
+      "kind": "trap",
+      "text": "What is the wingspan of Project Aurora's drone?",
+      "expect": [],
+      "answer": "[corpus:90] [fate:370@90] Project Aurora's drone has a maximum altitude of 8200 meters",
+      "effective_answer": "[corpus:90] [fate:370@90] Project Aurora's drone has a maximum altitude of 8200 meters",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_41+seg_39+seg_7+seg_63+seg_61+seg_6+seg_40/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.84,
+      "correct": false,
+      "abstained": false,
+      "hallucinated": true
+    },
+    {
+      "arm": "V",
+      "id": "g3",
+      "kind": "grounded",
+      "text": "Where will Project Aurora hold its first flight test?",
+      "expect": [
+        "reykjavik"
+      ],
+      "answer": "[corpus:2] [fate:18@2] Project Aurora will hold its first flight test in Reykjavik",
+      "effective_answer": "[corpus:2] [fate:18@2] Project Aurora will hold its first flight test in Reykjavik",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_39+seg_61+seg_7+seg_6+seg_62+seg_63+seg_40/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.74,
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "g4",
+      "kind": "grounded",
+      "text": "Near which islands will Project Borealis be deployed?",
+      "expect": [
+        "faroe"
+      ],
+      "answer": "[corpus:46] [fate:194@46] Project Borealis will be deployed near the Faroe Islands",
+      "effective_answer": "[corpus:46] [fate:194@46] Project Borealis will be deployed near the Faroe Islands",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_18+seg_7+seg_6+seg_62+seg_63+seg_61+seg_41/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.71,
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "c1",
+      "kind": "conflict",
+      "text": "What is Project Aurora's current budget?",
+      "expect": [
+        "4.2"
+      ],
+      "stale": false,
+      "answer": "[corpus:136] [fate:554@136] Project Borealiss",
+      "effective_answer": "[corpus:136] [fate:554@136] Project Borealiss",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_63+seg_39+seg_40+seg_41+seg_61+seg_62+seg_7/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 0.68,
+      "correct": false,
+      "abstained": false,
+      "hallucinated": true
+    },
+    {
+      "arm": "V",
+      "id": "t2",
+      "kind": "trap",
+      "text": "What color is Project Borealis's sensor housing?",
+      "expect": [],
+      "answer": "[corpus:134] [fate:546@134] Project Borealis's sensor has a maximum depth of 340 meters",
+      "effective_answer": "I don't know.",
+      "fog_decision": "abstain",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_62+seg_63+seg_61+seg_7+seg_6+seg_17+seg_40/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.77,
+      "correct": true,
+      "abstained": true,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "g5",
+      "kind": "grounded",
+      "text": "What is Project Borealis's internal codename?",
+      "expect": [
+        "bor-3"
+      ],
+      "answer": "[corpus:133] [fate:542@133] Project Borealis's internal codename is BOR-3",
+      "effective_answer": "[corpus:133] [fate:542@133] Project Borealis's internal codename is BOR-3",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_62+seg_61+seg_63+seg_40+seg_41+seg_39+seg_7/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.72,
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "g6",
+      "kind": "grounded",
+      "text": "What is Project Aurora's internal codename?",
+      "expect": [
+        "aur-7"
+      ],
+      "answer": "[corpus:89] [fate:366@89] Project Aurora's internal codename is AUR-7",
+      "effective_answer": "[corpus:89] [fate:366@89] Project Aurora's internal codename is AUR-7",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_40+seg_62+seg_63+seg_41+seg_39+seg_7+seg_6/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.71,
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "c2",
+      "kind": "conflict",
+      "text": "When is Project Borealis's first sea trial scheduled now?",
+      "expect": [
+        "june 2"
+      ],
+      "stale": false,
+      "answer": "[corpus:132] [fate:538@132] Project Borealis's first sea trial is scheduled for June 2",
+      "effective_answer": "[corpus:132] [fate:538@132] Project Borealis's first sea trial is scheduled for June 2",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_61+seg_39+seg_63+seg_62+seg_7+seg_6+seg_40/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.72,
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "t3",
+      "kind": "trap",
+      "text": "Who is the CEO of Helix Cells?",
+      "expect": [],
+      "answer": "[corpus:126] [fate:514@126] Log",
+      "effective_answer": "I don't know.",
+      "fog_decision": "abstain",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_7+seg_6+seg_58+seg_57+seg_52+seg_53+seg_61/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 0.65,
+      "correct": true,
+      "abstained": true,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "g7",
+      "kind": "grounded",
+      "text": "What is the maximum depth of Project Borealis's sensor?",
+      "expect": [
+        "340"
+      ],
+      "answer": "[corpus:134] [fate:546@134] Project Borealis's sensor has a maximum depth of 340 meters",
+      "effective_answer": "[corpus:134] [fate:546@134] Project Borealis's sensor has a maximum depth of 340 meters",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_62+seg_61+seg_7+seg_6+seg_63+seg_40+seg_39/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.72,
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "g8",
+      "kind": "grounded",
+      "text": "What is the maximum altitude of Project Aurora's drone?",
+      "expect": [
+        "8200",
+        "8,200"
+      ],
+      "answer": "[corpus:90] [fate:370@90] Project Aurora's drone has a maximum altitude of 8200 meters",
+      "effective_answer": "[corpus:90] [fate:370@90] Project Aurora's drone has a maximum altitude of 8200 meters",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_40+seg_39+seg_41+seg_63+seg_7+seg_62+seg_61/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.7,
+      "correct": true,
+      "abstained": false,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "t4",
+      "kind": "trap",
+      "text": "How many hours can Project Borealis's sensor run on one charge?",
+      "expect": [],
+      "answer": "[corpus:134] [fate:546@134] Project Borealis's sensor has a maximum depth of 340 meters",
+      "effective_answer": "[corpus:134] [fate:546@134] Project Borealis's sensor has a maximum depth of 340 meters",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_62+seg_63+seg_61+seg_7+seg_6+seg_39+seg_41/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/open_retrieval_follow_up_aware_span",
+      "latency_s": 0.68,
+      "correct": false,
+      "abstained": false,
+      "hallucinated": true
+    },
+    {
+      "arm": "V",
+      "id": "t5",
+      "kind": "trap",
+      "text": "On which street in Reykjavik is Project Aurora's office located?",
+      "expect": [],
+      "answer": "[corpus:136] [fate:554@136] Project Borealiss",
+      "effective_answer": "I don't know.",
+      "fog_decision": "abstain",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_39+seg_41+seg_7+seg_63+seg_61+seg_6+seg_40/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 0.78,
+      "correct": true,
+      "abstained": true,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "r1",
+      "kind": "drift_return",
+      "text": "Going back to the first project we discussed: who leads it and what is its codename?",
+      "expect": [
+        "mara voss",
+        "aur-7"
+      ],
+      "answer": "[corpus:2] [fate:22@2] Log",
+      "effective_answer": "I don't know.",
+      "fog_decision": "abstain",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_7+seg_6+seg_61+seg_39+seg_63+seg_41+seg_59/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 1.22,
+      "correct": false,
+      "abstained": true,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "r2",
+      "kind": "drift_return",
+      "text": "And for the second project we discussed: who leads it and when is its first sea trial?",
+      "expect": [
+        "ilya petrov",
+        "june 2"
+      ],
+      "answer": "[corpus:137] [fate:562@137] Log",
+      "effective_answer": "I don't know.",
+      "fog_decision": "abstain",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_61+seg_7+seg_39+seg_6+seg_63+seg_41+seg_52/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 1.43,
+      "correct": false,
+      "abstained": true,
+      "hallucinated": false
+    },
+    {
+      "arm": "V",
+      "id": "t6",
+      "kind": "trap",
+      "text": "What year was Project Aurora founded?",
+      "expect": [],
+      "answer": "[corpus:136] [fate:554@136] Project Auroras",
+      "effective_answer": "[corpus:136] [fate:554@136] Project Auroras",
+      "fog_decision": "emit",
+      "decode_path": "valhalla_base/native/query_frag/k7/ids=seg_63+seg_7+seg_6+seg_62+seg_61+seg_41+seg_39/natural/triad_memory+hub_routing+pipeline_v4+open_fate+stem_span/multihop_fate_entity",
+      "latency_s": 0.78,
+      "correct": false,
+      "abstained": false,
+      "hallucinated": true
+    }
+  ],
+  "summary": {
+    "V": {
+      "total": {
+        "n": 18,
+        "correct": 10,
+        "hallucinated": 4
+      },
+      "by_kind": {
+        "conflict": {
+          "n": 2,
+          "correct": 1,
+          "hallucinated": 1
+        },
+        "drift_return": {
+          "n": 2,
+          "correct": 0,
+          "hallucinated": 0
+        },
+        "grounded": {
+          "n": 8,
+          "correct": 6,
+          "hallucinated": 0
+        },
+        "trap": {
+          "n": 6,
+          "correct": 3,
+          "hallucinated": 3
+        }
+      }
+    }
+  }
+}

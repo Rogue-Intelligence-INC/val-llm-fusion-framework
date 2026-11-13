@@ -1,0 +1,12 @@
+{
+  "manifest_version": "valhalla-bake-1.0",
+  "product": "valhalla-server-tier-a-bake-24b",
+  "runtime_patch": false,
+  "base_model_id": "C:\\Ai\\models\\Mistral-Small-3.1-24B-Instruct-2503",
+  "bake_mode": "legacy-embed-safetensors",
+  "strength": 0.02,
+  "weight_delta_norm": 0.15099112689495087,
+  "patch_dim": 256,
+  "tokens_patched": 57,
+  "hidden_size": 5120
+}
