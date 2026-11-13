@@ -402,5 +402,13 @@ python tests\run_stress_points.py      # 第二轮：超窗压力
 
 原始数据：`tests/results_extreme/extreme_targeted_lines{800,3000,10000}.json`、`extreme_ceiling_drift.json`，日志 `tests/extreme_*.log`、`official_needle*.log`。
 
+### 11.8 体积优化第 3 步：线缆去冗余（2026-11-13 深夜）
+
+按"管线变束 + 冗余去除"的优化思考，先落地冗余去除（`fate_link` 变束待后续）：网关 `internal.keep_session` 收口瘦身——回传会话时清空与 `snapshot.fragments` 逐字节重复的顶层 `fragments`（引擎 HTTP 路径只读 snapshot+corpus，顶层副本仅进程内 client 使用；字段带 `#[serde(default)]` 可安全置空）、丢 rollback 栈、历史截断 32，与主项目 `slim_session_for_wire` 同规。
+
+冒烟（`tests/smoke_wire_dedupe.py`，SMOKE PASS）：瘦身会话上三条路全通——QA 针尖命中、extend 新增行可检索、检查点存盘→重载恢复答对。线缆 21.38MB → **10.7MB（−50%）**，网关回归（Fate 裁决/换语料）不变。
+
+同时量清增长曲线（唯一行数 → 全量/瘦身 MB）：30→1.33/0.67、59→6.18/3.1、88→21.4/10.7、117→88.3/44.1——**约立方增长**，去冗余只买 2×，413 天花板从 ~100 行挪到 ~117 行。大头在片段内嵌 stem_cells 本身，须靠变束（第 1/2 步）或进程内形态解决，如实标注。
+
 ---
 *Rogue Intelligence LNC · 本报告所有数字均来自本机实测工件；公平性边界与未复现项已在文中标注。*

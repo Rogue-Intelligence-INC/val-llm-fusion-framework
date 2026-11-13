@@ -113,6 +113,25 @@ def chat_config(lm_model_dir: str) -> dict:
     }
 
 
+def slim_session(session: dict) -> dict:
+    """Wire dedupe (main-project redundancy-removal discipline): the
+    engine's HTTP paths rebuild state from `snapshot` + `corpus` and
+    never read the top-level `fragments` copy, which duplicates
+    `snapshot.fragments` byte for byte (~half the wire size). Empty it
+    (serde-defaulted engine-side), drop any rollback stack, and cap
+    question history at 32, mirroring valhalla_base.py's
+    slim_session_for_wire."""
+    out = dict(session)
+    snap = out.get("snapshot")
+    if isinstance(snap, dict) and snap.get("fragments"):
+        out["fragments"] = []
+    out.pop("fate_rollback_stack", None)
+    qh = out.get("question_history")
+    if isinstance(qh, list) and len(qh) > 32:
+        out["question_history"] = qh[-32:]
+    return out
+
+
 def session_for(key: str) -> dict | None:
     return _sessions.get(key)
 
@@ -124,7 +143,7 @@ def drop_session(key: str) -> None:
 
 def keep_session(key: str, session: dict | None) -> None:
     if isinstance(session, dict):
-        _sessions[key] = session
+        _sessions[key] = slim_session(session)
 
 
 def keep_corpus(key: str, lines: list[str]) -> None:

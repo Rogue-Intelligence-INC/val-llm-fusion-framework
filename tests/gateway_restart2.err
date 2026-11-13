@@ -5,3 +5,4 @@
 127.0.0.1 - "POST /v1/models/unified-core-v1/chat/completions HTTP/1.1" 200 -
 127.0.0.1 - "POST /v1/models/unified-core-v1/chat/completions HTTP/1.1" 200 -
 127.0.0.1 - "GET /health HTTP/1.1" 200 -
+127.0.0.1 - "POST /v1/infer HTTP/1.1" 200 -
