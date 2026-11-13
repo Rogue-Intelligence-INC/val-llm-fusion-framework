@@ -1,7 +1,7 @@
 {
   "ceiling": {
     "failed_at_lines": 100,
-    "wire_mb_last_ok": 46.99
+    "wire_mb_last_ok": 46.44
   },
   "drift": {
     "checks": [
@@ -10,7 +10,7 @@
         "ok": true,
         "answer": "Project Aurora's internal codename is AUR-7.",
         "mode": "mistral_weak_emit",
-        "sec": 0.61,
+        "sec": 0.8,
         "wire_mb": 0.19,
         "sess_lines": 8
       },
@@ -19,7 +19,7 @@
         "ok": true,
         "answer": "Project Aurora's internal codename is AUR-7.",
         "mode": "mistral",
-        "sec": 0.39,
+        "sec": 0.4,
         "wire_mb": 0.69,
         "sess_lines": 19
       },
@@ -28,8 +28,8 @@
         "ok": true,
         "answer": "Project Aurora's internal codename is AUR-7.",
         "mode": "mistral",
-        "sec": 0.39,
-        "wire_mb": 1.27,
+        "sec": 0.4,
+        "wire_mb": 1.28,
         "sess_lines": 26
       },
       {
@@ -37,8 +37,8 @@
         "ok": true,
         "answer": "Project Aurora's internal codename is AUR-7.",
         "mode": "mistral",
-        "sec": 0.44,
-        "wire_mb": 1.27,
+        "sec": 0.4,
+        "wire_mb": 1.28,
         "sess_lines": 26
       },
       {
@@ -46,8 +46,8 @@
         "ok": true,
         "answer": "Project Aurora's internal codename is AUR-7.",
         "mode": "mistral",
-        "sec": 0.38,
-        "wire_mb": 1.27,
+        "sec": 0.4,
+        "wire_mb": 1.28,
         "sess_lines": 26
       },
       {
@@ -55,8 +55,8 @@
         "ok": true,
         "answer": "Project Aurora's internal codename is AUR-7.",
         "mode": "mistral",
-        "sec": 0.39,
-        "wire_mb": 1.27,
+        "sec": 0.37,
+        "wire_mb": 1.28,
         "sess_lines": 26
       },
       {
@@ -65,7 +65,7 @@
         "answer": "Project Aurora's internal codename is AUR-7.",
         "mode": "mistral",
         "sec": 0.39,
-        "wire_mb": 1.27,
+        "wire_mb": 1.28,
         "sess_lines": 26
       }
     ],

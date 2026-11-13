@@ -12,7 +12,9 @@ from valhalla_server.config import API_KEY, BASE_MODEL, HOST, PORT
 from valhalla_server.inference import _materialize, generate
 from valhalla_server.pipeline import job_status, list_models, start_pipeline
 
-MAX_BODY = 512_000
+# Media ingest carries base64 wav/png items; the engine's own limit is
+# 32MB, so the gateway admits the same (chat bodies stay tiny in practice).
+MAX_BODY = 33_554_432
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -129,6 +131,154 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, deploy_decode_head(head_id))
             except KeyError:
                 self._json(404, {"error": "没有这个解码头。先跑 /v1/modelops。"})
+            return
+        if path == "/v1/media/ingest":
+            # Multimodal fix (official bridge contract): an item's text +
+            # audio + image are CO-INGESTED into the same fragment; the
+            # engine binds by co-occurrence, not cross-space similarity.
+            # Media bytes are encoded by the repo's DL-front encoder into
+            # the 384-d family the engine expects.
+            import base64
+
+            from valhalla_server import media
+
+            model_id = incoming.get("model") if isinstance(incoming.get("model"), str) and incoming["model"].strip() else ""
+            items_in = incoming.get("items") if isinstance(incoming.get("items"), list) else []
+            if not model_id or not items_in:
+                self._json(400, {"error": "model 与 items 必填。"})
+                return
+            try:
+                folder = _materialize(model_id)
+                if not internal.start(str(folder)):
+                    self._json(503, {"error": "ValhallaBase 运行时没有启动。"})
+                    return
+                ctx_items = []
+                for it in items_in:
+                    if not isinstance(it, dict):
+                        continue
+                    item: dict = {}
+                    if isinstance(it.get("text"), str) and it["text"].strip():
+                        item["text"] = it["text"][:500]
+                    af = it.get("audio_features")
+                    if af is None and it.get("audio_b64"):
+                        af = media.encode_bytes(base64.b64decode(it["audio_b64"]), "audio", ".wav")
+                    if isinstance(af, list) and af:
+                        item["audio_features"] = [float(x) for x in af]
+                    imf = it.get("image_features")
+                    if imf is None and it.get("image_b64"):
+                        imf = media.encode_bytes(base64.b64decode(it["image_b64"]), "image", ".png")
+                    if isinstance(imf, list) and imf:
+                        item["image_features"] = [float(x) for x in imf]
+                    if item:
+                        ctx_items.append(item)
+                cfg = internal.chat_config(str(folder))
+                session = internal.session_for(model_id)
+                if session:
+                    payload = {"questions": [], "session_extend_only": True,
+                               "session": session, "append_items": ctx_items,
+                               "config": cfg}
+                else:
+                    payload = {"questions": [], "fate_warmup_only": True,
+                               "context_items": ctx_items, "config": cfg}
+                body = internal.infer(payload)
+                internal.keep_session(model_id, body.get("session"))
+                sess = body.get("session") or {}
+                internal.keep_corpus(model_id, list(sess.get("corpus") or []))
+                registry = internal.media_items(model_id) if session else []
+                line_no = sum(1 for e in registry if e.get("line_index") is not None)
+                for item in ctx_items:
+                    entry = {"text": item.get("text"),
+                             "audio_features": item.get("audio_features"),
+                             "image_features": item.get("image_features"),
+                             "line_index": None}
+                    if item.get("text"):
+                        entry["line_index"] = line_no
+                        line_no += 1
+                    registry.append(entry)
+                internal.keep_media_items(model_id, registry)
+                self._json(200, {"ok": True, "model": model_id,
+                                 "items": len(ctx_items),
+                                 "session_lines": len(sess.get("corpus") or []),
+                                 "features": body.get("features")})
+            except Exception as exc:  # noqa: BLE001
+                self._json(503, {"error": str(exc)[-300:]})
+            return
+        if path == "/v1/media/ask":
+            import base64
+
+            from valhalla_server import hybrid, media
+
+            model_id = incoming.get("model") if isinstance(incoming.get("model"), str) and incoming["model"].strip() else ""
+            question = incoming.get("question") if isinstance(incoming.get("question"), str) else ""
+            if not model_id or not question:
+                self._json(400, {"error": "model 与 question 必填。"})
+                return
+            try:
+                folder = _materialize(model_id)
+                if not internal.start(str(folder)):
+                    self._json(503, {"error": "ValhallaBase 运行时没有启动。"})
+                    return
+                q: dict = {"id": "mq", "text": question[:2000], "score_type": "open"}
+                af = incoming.get("audio_features")
+                if af is None and incoming.get("audio_b64"):
+                    af = media.encode_bytes(base64.b64decode(incoming["audio_b64"]), "audio", ".wav")
+                if isinstance(af, list) and af:
+                    q["audio_features"] = [float(x) for x in af]
+                imf = incoming.get("image_features")
+                if imf is None and incoming.get("image_b64"):
+                    imf = media.encode_bytes(base64.b64decode(incoming["image_b64"]), "image", ".png")
+                if isinstance(imf, list) and imf:
+                    q["image_features"] = [float(x) for x in imf]
+                # Feature grasp: the engine has no feature->line
+                # retrieval (fusion forms, line anchor stays textual),
+                # so a clear encoder-space winner supplies the evidence
+                # line and the decode head answers from its caption.
+                registry = internal.media_items(model_id)
+                corpus_now = internal.corpus_lines(model_id)
+                for modality in ("image", "audio"):
+                    feats = q.get(f"{modality}_features")
+                    if not feats:
+                        continue
+                    hit = media.grasp(registry, modality, feats)
+                    if hit is None:
+                        continue
+                    item_no, score = hit
+                    line_idx = registry[item_no].get("line_index")
+                    if not isinstance(line_idx, int) or not (0 <= line_idx < len(corpus_now)):
+                        continue
+                    from valhalla_server import mistral_head
+
+                    decoded = mistral_head.decode(
+                        f"About the media item described in the evidence: {question}",
+                        [corpus_now[line_idx]])
+                    if decoded:
+                        self._json(200, {"model": model_id, "answer": decoded,
+                                         "mode": "feature_grasp",
+                                         "grasp": {"item": item_no, "score": round(score, 4),
+                                                   "line_index": line_idx},
+                                         "fog_decision": None,
+                                         "retrieval_corpus_idx": line_idx})
+                        return
+                session = internal.session_for(model_id)
+                payload = {"questions": [q], "config": internal.chat_config(str(folder)),
+                           "context": []}
+                if session:
+                    payload["session"] = session
+                body = internal.infer(payload)
+                internal.keep_session(model_id, body.get("session"))
+                rows = body.get("rows") or []
+                row = rows[0] if rows and isinstance(rows[0], dict) else {}
+                fog = row.get("fog_decision")
+                fog_kind = fog.get("decision", "") if isinstance(fog, dict) else ""
+                answer, mode = hybrid.resolve(
+                    fog_kind, question, internal.corpus_lines(model_id),
+                    row.get("retrieval_corpus_idx"), str(row.get("answer", "")))
+                self._json(200, {"model": model_id, "answer": answer, "mode": mode,
+                                 "fog_decision": fog,
+                                 "retrieval_corpus_idx": row.get("retrieval_corpus_idx"),
+                                 "native_answer": row.get("answer")})
+            except Exception as exc:  # noqa: BLE001
+                self._json(503, {"error": str(exc)[-300:]})
             return
         if path == "/v1/pipeline":
             model_id = incoming.get("model_id") if isinstance(incoming.get("model_id"), str) and incoming["model_id"].strip() else "unified-core-v1"

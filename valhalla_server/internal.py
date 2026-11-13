@@ -173,6 +173,20 @@ def bundle_lines(lines: list[str], threshold: float = 0.85) -> list[str]:
     return out
 
 
+_media_items: dict[str, list[dict]] = {}
+
+
+def keep_media_items(key: str, items: list[dict]) -> None:
+    """Registry of co-ingested media items per model, in engine corpus
+    order (only text-bearing items occupy a corpus line)."""
+    if items:
+        _media_items[key] = items
+
+
+def media_items(key: str) -> list[dict]:
+    return list(_media_items.get(key) or [])
+
+
 def session_for(key: str) -> dict | None:
     return _sessions.get(key)
 

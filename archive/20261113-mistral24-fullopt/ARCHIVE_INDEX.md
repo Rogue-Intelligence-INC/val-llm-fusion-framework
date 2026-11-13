@@ -61,3 +61,8 @@ python tests\run_stress_hybrid.py
 fair 电池不可运行：checkout 缺 `artifact.py`、`run_strict_incubation_experiment.py`、`incubation_benchmark_suite.json`（全机不存在），已在报告中如实标注。
 
 *Rogue Intelligence LNC.*
+
+## 2026-11-14 凌晨增补（§12）
+- 多模修复：media.py v2 编码器（CLIP ViT-H/时段 mel）+ 网关特征抓取；多模电池 9/9（mm_fixed5.log, multimodal_fixed.json）
+- 全面复测：extreme_rerun2.log、drift_rerun.log；探针 probe_grasp_cos.py 归档 artifacts/
+- 报告更新至 §12（含 ★1–★6 独有点圈注），PDF 已重生成
