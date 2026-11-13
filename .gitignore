@@ -8,4 +8,5 @@ runtime/*.exe
 runtime/*.enc
 # Logs and packaged archives (contents kept as plain files)
 *.log
+*.err
 *.zip

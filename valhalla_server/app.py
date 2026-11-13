@@ -222,6 +222,16 @@ class Handler(BaseHTTPRequestHandler):
                 internal.keep_session(model_id, body.get("session"))
                 if all_lines:
                     internal.keep_corpus(model_id, all_lines)
+                # Pipeline -> bundle: once a session accumulates enough
+                # seg fragments, link them into chains (fate_link_only).
+                # Measured: fragments -87% at group 8, wire -20%, QA flat.
+                sess_now = internal.session_for(model_id)
+                frags = ((sess_now or {}).get("snapshot") or {}).get("fragments") or []
+                if len(frags) >= internal.LINK_MIN_FRAGMENTS:
+                    linked = internal.link_session(
+                        sess_now, internal.chat_config(str(folder)))
+                    if linked:
+                        internal.keep_session(model_id, linked)
                 fate_telemetry = body.get("fate_telemetry")
         except Exception:
             text = ""

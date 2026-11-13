@@ -46,6 +46,11 @@ def start(lm_model_dir: str) -> bool:
             **os.environ,
             "VALHALLA_LM_MODEL": lm_model_dir,
             "VALHALLA_DYNAMIC_CORPUS_FRAGMENTS": "1",
+            # Bundling (fate_link): measured 40 -> 5 fragments, wire -20%,
+            # QA unchanged (tests/measure_fate_link.py). Default group 2
+            # only halves the count; 8 is the adopted operating point.
+            "VALHALLA_FATE_LINK_MAX_GROUP": os.environ.get(
+                "VALHALLA_FATE_LINK_MAX_GROUP", "8"),
         }
         _proc = subprocess.Popen(
             [str(exe), "serve", "--port", str(INTERNAL_PORT)],
@@ -129,6 +134,42 @@ def slim_session(session: dict) -> dict:
     qh = out.get("question_history")
     if isinstance(qh, list) and len(qh) > 32:
         out["question_history"] = qh[-32:]
+    return out
+
+
+LINK_MIN_FRAGMENTS = int(os.environ.get("VALHALLA_LINK_MIN_FRAGMENTS", "16"))
+
+
+def link_session(session: dict | None, config: dict) -> dict | None:
+    """Bundle a session's seg fragments into link chains via the
+    engine's fate_link_only request (pipeline -> bundle). Returns the
+    linked session, or None on any failure (caller keeps the old one)."""
+    if not isinstance(session, dict):
+        return None
+    try:
+        body = infer({"questions": [], "fate_link_only": True,
+                      "session": slim_session(session), "config": config})
+    except Exception:  # noqa: BLE001 - linking is an optimization
+        return None
+    linked = body.get("session")
+    return linked if isinstance(linked, dict) else None
+
+
+def bundle_lines(lines: list[str], threshold: float = 0.85) -> list[str]:
+    """Ingest bundling (incubation-project bundling discipline): lines
+    whose token sets are near-identical (Jaccard >= threshold) form one
+    bundle; only the first (strongest, caller-ordered) representative is
+    kept. Used by targeted-ingest callers before append so near-duplicate
+    template lines never grow the session."""
+    kept: list[set] = []
+    out: list[str] = []
+    for line in lines:
+        toks = set(line.lower().split())
+        if any(toks and len(toks & k) / max(1, len(toks | k)) >= threshold
+               for k in kept):
+            continue
+        kept.append(toks)
+        out.append(line)
     return out
 
 

@@ -1,0 +1,31 @@
+{
+  "before": {
+    "fragments": 40,
+    "kinds": {
+      "seg": 40
+    },
+    "full_mb": 21.28,
+    "slim_mb": 10.65
+  },
+  "after": {
+    "fragments": 5,
+    "kinds": {
+      "link": 5
+    },
+    "full_mb": 17.13,
+    "slim_mb": 8.57
+  },
+  "features": [
+    "fate_link_only",
+    "fate_fragment_link",
+    "links_merged:35"
+  ],
+  "qa_before": {
+    "n_start": true,
+    "n_mid": true
+  },
+  "qa_after": {
+    "n_start": true,
+    "n_mid": true
+  }
+}

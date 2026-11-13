@@ -75,23 +75,57 @@ def tile_track(question: str, corpus: list[str], k: int = 3,
     return scored[:k]
 
 
+def _jaccard(a: set, b: set) -> float:
+    if not a or not b:
+        return 0.0
+    return len(a & b) / len(a | b)
+
+
 def build_evidence(question: str, corpus: list[str], retrieval_idx: object,
                    native_answer: str, k: int = 3) -> list[str]:
+    """Bundle-then-grasp evidence (incubation-project discipline):
+    Fate's structure line is always kept verbatim; lexical candidates
+    are bundled by token-set similarity (Jaccard >= 0.75 = same bundle,
+    strongest first wins) so near-duplicate template lines never flood
+    the decode head; the strongest out-of-bundle line survives as the
+    escape representative."""
     evidence: list[str] = []
     seen: set[str] = set()
+    kept_tokens: list[set] = []
 
-    def add(line: str | None) -> None:
-        if line and line not in seen and not _INJECTION.search(line):
-            seen.add(line)
-            evidence.append(line)
+    def add(line: str | None, *, force: bool = False) -> None:
+        if not line or line in seen or _INJECTION.search(line):
+            return
+        toks = set(_tokens(line))
+        if not force and any(_jaccard(toks, k) >= 0.75 for k in kept_tokens):
+            return  # same bundle as a stronger line already kept
+        seen.add(line)
+        kept_tokens.append(toks)
+        evidence.append(line)
 
     idx = retrieval_idx if isinstance(retrieval_idx, int) else -1
     if 0 <= idx < len(corpus):
-        add(corpus[idx])
-    for i, _score in tile_track(question, corpus, k=k, exclude={idx}):
+        add(corpus[idx], force=True)
+    for i, _score in tile_track(question, corpus, k=k + 3, exclude={idx}):
+        if len(evidence) >= 4:
+            break
         add(corpus[i])
     add(native_answer)
     return evidence
+
+
+def field_gate(question: str, corpus: list[str]) -> bool:
+    """High-energy escape rule (Fate grasp): weak emit may only fire
+    when the strongest lexical field rises above the corpus mean field.
+    Below-mean evidence is background, not a signal worth breaking
+    Fate's silence for."""
+    if not corpus:
+        return False
+    scored = tile_track(question, corpus, k=len(corpus))
+    if not scored:
+        return False
+    mean = sum(s for _i, s in scored) / len(corpus)
+    return scored[0][1] > mean
 
 
 def resolve(fog_kind: str, question: str, corpus: list[str],
@@ -100,7 +134,7 @@ def resolve(fog_kind: str, question: str, corpus: list[str],
     native_fallback."""
     evidence = build_evidence(question, corpus, retrieval_idx, native_answer)
     if fog_kind in ("abstain", "defer"):
-        if not evidence:
+        if not evidence or not field_gate(question, corpus):
             return ABSTAIN_TEXT, "fog_abstain"
         decoded = mistral_head.decode(question, evidence)
         if decoded is None:

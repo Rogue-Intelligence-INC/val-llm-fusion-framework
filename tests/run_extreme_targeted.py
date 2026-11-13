@@ -22,7 +22,7 @@ sys.path.insert(0, r"C:\Ai\rogue-products\valhalla-server\tests")
 sys.path.insert(0, r"C:\Ai\rogue-products\valhalla-server")
 from run_extreme_stress import (CONFIG, QUESTIONS, fabrication,  # noqa: E402
                                 gen_corpus, is_abstain, post, score)
-from valhalla_server import hybrid  # noqa: E402
+from valhalla_server import hybrid, internal  # noqa: E402
 
 ENGINE = "http://127.0.0.1:8787/v1/infer"
 HEAD = "http://127.0.0.1:18080/v1/chat/completions"
@@ -43,7 +43,10 @@ def slim(sess):
 
 
 def targeted(question, corpus):
-    return [corpus[i] for i, _s in hybrid.tile_track(question, corpus, k=K)]
+    lines = [corpus[i] for i, _s in hybrid.tile_track(question, corpus, k=K)]
+    # Ingest bundling: near-duplicate template lines form one bundle;
+    # only the strongest representative is appended to the session.
+    return internal.bundle_lines(lines)
 
 
 def run_arm(arm, corpus):
