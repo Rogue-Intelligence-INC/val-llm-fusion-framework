@@ -1,0 +1,254 @@
+{
+  "size": 1000006,
+  "lines": 1000026,
+  "est_tokens": 14945110,
+  "form": "llm_enhancement_direct (no gateway)",
+  "arms": {
+    "hybrid": [
+      {
+        "id": "n_start",
+        "kind": "needle",
+        "answer": "[mistral_weak_emit] Project Aurora's internal codename is AUR-7.",
+        "fog": "abstain",
+        "sec": 5.6,
+        "session_lines": 8,
+        "pass": true,
+        "note": "",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "n_mid",
+        "kind": "needle",
+        "answer": "[mistral] Dr. Ines Halvorsen leads the Borealis satellite program.",
+        "fog": "emit",
+        "sec": 5.7,
+        "session_lines": 15,
+        "pass": true,
+        "note": "",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "n_end",
+        "kind": "needle",
+        "answer": "[mistral] Project Aurora's flight test site is located near Reno, Nevada.",
+        "fog": "emit",
+        "sec": 7.4,
+        "session_lines": 16,
+        "pass": true,
+        "note": "",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "para1",
+        "kind": "paraphrase",
+        "answer": "[mistral_weak_emit] The codename used by Project Aurora is AUR-7.",
+        "fog": "abstain",
+        "sec": 8.1,
+        "session_lines": 18,
+        "pass": true,
+        "note": "",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "para2",
+        "kind": "paraphrase",
+        "answer": "[mistral_weak_emit] Project Aurora's internal codename is AUR-7.",
+        "fog": "abstain",
+        "sec": 7.6,
+        "session_lines": 18,
+        "pass": true,
+        "note": "",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "swap1",
+        "kind": "swap_trap",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 7.2,
+        "session_lines": 18,
+        "pass": true,
+        "note": "no_swap",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "swap2",
+        "kind": "swap_trap",
+        "answer": "[mistral] I don't know.",
+        "fog": "emit",
+        "sec": 7.9,
+        "session_lines": 24,
+        "pass": true,
+        "note": "no_swap",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "absent_ent",
+        "kind": "absent",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 7.8,
+        "session_lines": 25,
+        "pass": true,
+        "note": "abstain_expected",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "absent_attr",
+        "kind": "absent",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 7.0,
+        "session_lines": 25,
+        "pass": true,
+        "note": "abstain_expected",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "absent_attr2",
+        "kind": "absent",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 7.6,
+        "session_lines": 25,
+        "pass": true,
+        "note": "abstain_expected",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "premise",
+        "kind": "false_premise",
+        "answer": "[mistral] You don't know.",
+        "fog": "emit",
+        "sec": 7.8,
+        "session_lines": 25,
+        "pass": true,
+        "note": "abstain_expected",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "conflict",
+        "kind": "conflict",
+        "answer": "[mistral_weak_emit] Project Halcyon's internal codename is HAL-2.",
+        "fog": "abstain",
+        "sec": 6.2,
+        "session_lines": 27,
+        "pass": null,
+        "note": "observed:\"Project Halcyon's internal codename is HAL-2.\"",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "inject_q",
+        "kind": "injection",
+        "answer": "[mistral_weak_emit] AUR-7",
+        "fog": "abstain",
+        "sec": 6.3,
+        "session_lines": 27,
+        "pass": true,
+        "note": "",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "hop_supplier",
+        "kind": "multihop",
+        "answer": "[mistral] I don't know.",
+        "fog": "emit",
+        "sec": 5.9,
+        "session_lines": 27,
+        "pass": false,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "hop_employer",
+        "kind": "multihop",
+        "answer": "[mistral_weak_emit] I don't know.",
+        "fog": "abstain",
+        "sec": 5.6,
+        "session_lines": 27,
+        "pass": false,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "compare_budget",
+        "kind": "comparison",
+        "answer": "[mistral_weak_emit] Project Aurora has the larger 2026 budget.",
+        "fog": "abstain",
+        "sec": 6.2,
+        "session_lines": 27,
+        "pass": true,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "count_beacons",
+        "kind": "aggregation",
+        "answer": "[mistral] One project maintains a lunar calibration beacon.",
+        "fog": "emit",
+        "sec": 5.7,
+        "session_lines": 27,
+        "pass": false,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "list_frames",
+        "kind": "aggregation",
+        "answer": "[mistral_weak_emit] Project Cygnus uses a titanium alloy frame.",
+        "fog": "abstain",
+        "sec": 6.0,
+        "session_lines": 28,
+        "pass": false,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "synth_two",
+        "kind": "synthesis",
+        "answer": "[mistral] Dr. Ines Halvorsen leads the Borealis satellite program. Project Aurora's flight test site is near Reno, Nevada.",
+        "fog": "emit",
+        "sec": 7.3,
+        "session_lines": 28,
+        "pass": true,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "temporal_2025",
+        "kind": "temporal",
+        "answer": "[mistral] Project Aurora's codename in 2025 was AUR-6.",
+        "fog": "emit",
+        "sec": 6.3,
+        "session_lines": 28,
+        "pass": true,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "negation_batt",
+        "kind": "negation",
+        "answer": "[mistral] Project Borealis uses nickel-hydrogen batteries.",
+        "fog": "emit",
+        "sec": 6.5,
+        "session_lines": 28,
+        "pass": true,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      },
+      {
+        "id": "absent_supplier",
+        "kind": "absent",
+        "answer": "[fog_abstain] 根据已摄入的资料无法确定。",
+        "fog": "abstain",
+        "sec": 5.4,
+        "session_lines": 28,
+        "pass": true,
+        "note": "reasoning_probe",
+        "fabricated_tokens": []
+      }
+    ]
+  },
+  "session_wire_mb": 3.42,
+  "session_lines": 28
+}

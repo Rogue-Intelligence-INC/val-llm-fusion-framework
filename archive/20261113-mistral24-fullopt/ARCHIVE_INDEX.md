@@ -66,3 +66,6 @@ fair 电池不可运行：checkout 缺 `artifact.py`、`run_strict_incubation_ex
 - 多模修复：media.py v2 编码器（CLIP ViT-H/时段 mel）+ 网关特征抓取；多模电池 9/9（mm_fixed5.log, multimodal_fixed.json）
 - 全面复测：extreme_rerun2.log、drift_rerun.log；探针 probe_grasp_cos.py 归档 artifacts/
 - 报告更新至 §12（含 ★1–★6 独有点圈注），PDF 已重生成
+
+## 2026-11-14 LLM 增强极限（§13）
+- run_enhancement_ceiling.py：45万/149万/1495万 token 三档增强臂 17/21、编造 0；天花板=多跳 0/2、聚合 0/2（集束代价）、矛盾沉默
