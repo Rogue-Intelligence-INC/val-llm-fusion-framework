@@ -29,7 +29,7 @@
         "fog": "emit",
         "retrieval_idx": 2,
         "retrieved_line": "Project Aurora uses battery cells supplied by Helix Cells.",
-        "sec": 0.0
+        "sec": 0.1
       },
       {
         "id": "q4_text",
@@ -79,7 +79,7 @@
         "fog": "abstain",
         "retrieval_idx": 5,
         "retrieved_line": "Project Draco has a budget of 9.4 million euros.",
-        "sec": 0.1
+        "sec": 0.0
       },
       {
         "id": "q9_distractor",
@@ -139,7 +139,7 @@
         "id": "q8_trap",
         "pass": true,
         "answer": "You don't know.",
-        "sec": 0.2
+        "sec": 0.1
       },
       {
         "id": "q9_distractor",
@@ -152,12 +152,12 @@
       {
         "id": "q1_text",
         "pass": false,
-        "answer": "I don't have information about a specific project named \"Aurora\" and who leads it. Could you provide more context or details about the project? For example, is "
+        "answer": "I don't have specific information about who leads Project Aurora, as my knowledge was last updated in 2023 and I don't have real-time data or the ability to bro"
       },
       {
         "id": "q2_text",
         "pass": false,
-        "answer": "I don't have information about a project named \"Borealis\" as of my last update in 2023. It's possible that it could be a new or lesser-known project, or there m"
+        "answer": "I don't have specific information about a project named \"Borealis\" or who leads it. It's possible that \"Project Borealis\" could refer to different initiatives i"
       },
       {
         "id": "q3_text",
@@ -167,12 +167,12 @@
       {
         "id": "q4_text",
         "pass": false,
-        "answer": "I don't have specific information about Project Borealis or the companies that supply components for it. Project Borealis is a highly confidential and speculati"
+        "answer": "I don't have specific information about Project Borealis or the suppliers involved in it. Project Borealis is a highly confidential and speculative project rela"
       },
       {
         "id": "q5_mixed",
         "pass": false,
-        "answer": "I don't have information about a specific \"Project Aurora\" or the company that supplies its battery cells. It's possible that Project Aurora refers to different"
+        "answer": "I don't have the information about who leads Project Aurora or which company supplies its battery cells. Project Aurora might refer to different initiatives in "
       },
       {
         "id": "q6_imgfeat",
@@ -189,12 +189,12 @@
       {
         "id": "q8_trap",
         "pass": false,
-        "answer": "I don't have information about a project named \"Zephyr\" or who leads it. It's possible that \"Project Zephyr\" could refer to different initiatives in various fie"
+        "answer": "I don't have information about a specific project named \"Zephyr\" and who leads it. Could you provide more context or details about Project Zephyr? For example, "
       },
       {
         "id": "q9_distractor",
         "pass": false,
-        "answer": "I don't have information about a project named \"Project Cygnus\" as of my last update in 2023. It's possible that it's a new or lesser-known project, or it might"
+        "answer": "I don't have information about a project named \"Cygnus\" as of my last update in 2023. It's possible that it could be a new, confidential, or highly specialized "
       }
     ]
   },

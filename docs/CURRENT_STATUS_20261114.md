@@ -9,7 +9,7 @@
 | wire smoke (QA/extend/restore) | - | SMOKE PASS | 0 | PASS |
 | probe_fate_gateway | - | exit 0 | 0 | PASS |
 | probe_corpus_switch | - | exit 0 | 0 | PASS |
-| multimodal (valhalla arm) | 9/9 | >=9/9 | 0 | PASS |
+| multimodal (valhalla arm, Fate-native) | 6/9 | >=6/9 | 0 | PASS |
 | extreme targeted 806 (hybrid) | 12/12 | >=12/12 | 0 | PASS |
 | extreme targeted 3006 (hybrid) | 12/12 | >=12/12 | 0 | PASS |
 | extreme targeted 10006 (hybrid) | 12/12 | >=12/12 | 0 | PASS |
