@@ -10,10 +10,10 @@
 | probe_fate_gateway | - | exit 0 | 0 | PASS |
 | probe_corpus_switch | - | exit 0 | 0 | PASS |
 | multimodal (valhalla arm) | 7/9 | >=9/9 | 0 | FAIL |
-| extreme targeted 806 (hybrid) | 9/12 | >=12/12 | 0 | FAIL |
-| extreme targeted 3006 (hybrid) | 9/12 | >=12/12 | 0 | FAIL |
+| extreme targeted 806 (hybrid) | 10/12 | >=12/12 | 0 | FAIL |
+| extreme targeted 3006 (hybrid) | 10/12 | >=12/12 | 0 | FAIL |
 | extreme targeted 10006 (hybrid) | 9/12 | >=12/12 | 0 | FAIL |
-| enhancement ceiling 1.5M tok (hybrid) | 12/21 | >=16/21 | 0 | FAIL |
+| enhancement ceiling 1.5M tok (hybrid) | 13/21 | >=16/21 | 0 | FAIL |
 | BOOST adapt v2 (spread+operator+discipline) | 20/21 | >=19/21 | 0 | PASS |
 
 倍率口径（工件派生）：工作语料 14,945,110 token = 原生窗口 912×（千倍级）、全上下文死亡点 331×、每题触达语料 ~1/83,000、会话线缆 3.42MB 恒定。

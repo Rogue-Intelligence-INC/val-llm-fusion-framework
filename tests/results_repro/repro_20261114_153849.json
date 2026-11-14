@@ -1,0 +1,127 @@
+{
+  "when": "20261114_153849",
+  "quick": false,
+  "engine": {
+    "protocol": "valhalla-base-v1",
+    "ok": true,
+    "service": "valhalla_base",
+    "version": "1.1.0",
+    "git_sha": "dev",
+    "endpoints": [
+      "GET /health",
+      "GET /v1/protocol",
+      "GET /v1/repro",
+      "POST /v1/infer",
+      "POST /v1/release",
+      "GET /dashboard/"
+    ]
+  },
+  "services": [
+    "decode head: already healthy",
+    "gateway: already healthy",
+    "engine: already healthy"
+  ],
+  "steps": [
+    {
+      "name": "multimodal",
+      "exit": 0,
+      "seconds": 24.7
+    },
+    {
+      "name": "probe_fate_gateway",
+      "exit": 0,
+      "seconds": 2.2
+    },
+    {
+      "name": "probe_corpus_switch",
+      "exit": 0,
+      "seconds": 1.6
+    },
+    {
+      "name": "smoke",
+      "exit": 0,
+      "seconds": 8.1
+    },
+    {
+      "name": "extreme_targeted",
+      "exit": 0,
+      "seconds": 62.2
+    },
+    {
+      "name": "enhancement_ceiling",
+      "exit": 0,
+      "seconds": 59.8
+    },
+    {
+      "name": "boost_adapt",
+      "exit": 0,
+      "seconds": 73.7
+    }
+  ],
+  "verdicts": [
+    {
+      "suite": "wire smoke (QA/extend/restore)",
+      "score": "-",
+      "expected": "SMOKE PASS",
+      "fabricated": 0,
+      "verdict": "PASS"
+    },
+    {
+      "suite": "probe_fate_gateway",
+      "score": "-",
+      "expected": "exit 0",
+      "fabricated": 0,
+      "verdict": "PASS"
+    },
+    {
+      "suite": "probe_corpus_switch",
+      "score": "-",
+      "expected": "exit 0",
+      "fabricated": 0,
+      "verdict": "PASS"
+    },
+    {
+      "suite": "multimodal (valhalla arm)",
+      "score": "7/9",
+      "expected": ">=9/9",
+      "fabricated": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "suite": "extreme targeted 806 (hybrid)",
+      "score": "10/12",
+      "expected": ">=12/12",
+      "fabricated": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "suite": "extreme targeted 3006 (hybrid)",
+      "score": "10/12",
+      "expected": ">=12/12",
+      "fabricated": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "suite": "extreme targeted 10006 (hybrid)",
+      "score": "9/12",
+      "expected": ">=12/12",
+      "fabricated": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "suite": "enhancement ceiling 1.5M tok (hybrid)",
+      "score": "13/21",
+      "expected": ">=16/21",
+      "fabricated": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "suite": "BOOST adapt v2 (spread+operator+discipline)",
+      "score": "20/21",
+      "expected": ">=19/21",
+      "fabricated": 0,
+      "verdict": "PASS"
+    }
+  ],
+  "overall": "FAIL"
+}

@@ -104,8 +104,20 @@ def build_evidence(question: str, corpus: list[str], retrieval_idx: object,
     idx = retrieval_idx if isinstance(retrieval_idx, int) else -1
     if 0 <= idx < len(corpus):
         add(corpus[idx])
-    add(native_answer)
+    add(_clean_native(native_answer))
     return evidence
+
+
+_TAG = re.compile(r"\[(?:corpus|fate):[^\]]*\]\s*")
+
+
+def _clean_native(text: str | None) -> str | None:
+    """Native answers arrive as tagged fragments ('[corpus:0]
+    [fate:10@0] Project Pyxis'). As decode evidence the tags and
+    bare name fragments are noise that can talk the head out of a
+    correct grasped line; keep only cleaned, statement-length text."""
+    t = _TAG.sub("", text or "").strip()
+    return t if len(t) >= 20 else None
 
 
 def fate_gate(fog_decision: object, fog_evidence: object) -> bool:
@@ -164,19 +176,19 @@ def resolve(fog_kind: str, question: str, corpus: list[str],
                  if (fog_decision is not None or fog_evidence is not None)
                  else field_gate(question, corpus))
         if not evidence or not gated:
-            out = _regrasp(question, corpus, regrasp, weak=True)
+            out = _regrasp(question, corpus, regrasp, weak=True, base=evidence)
             return out if out else (ABSTAIN_TEXT, "fog_abstain")
         decoded = mistral_head.decode(question, evidence)
         if decoded is None:
             return ABSTAIN_TEXT, "fog_abstain"
         if _abstainish(decoded):
-            out = _regrasp(question, corpus, regrasp, weak=True)
+            out = _regrasp(question, corpus, regrasp, weak=True, base=evidence)
             if out:
                 return out
         return decoded, "mistral_weak_emit"
     decoded = mistral_head.decode(question, evidence) if evidence else None
     if decoded and _abstainish(decoded):
-        out = _regrasp(question, corpus, regrasp, weak=False)
+        out = _regrasp(question, corpus, regrasp, weak=False, base=evidence)
         if out:
             return out
     if decoded:
@@ -184,13 +196,16 @@ def resolve(fog_kind: str, question: str, corpus: list[str],
     return native_answer, "native_fallback"
 
 
-def _regrasp(question: str, corpus: list[str], regrasp, *, weak: bool):
+def _regrasp(question: str, corpus: list[str], regrasp, *, weak: bool,
+             base: list[str] | None = None):
     """Fate re-grasp under transformer rewrites. Each variant goes
-    back through the caller's engine path; only Fate-sourced evidence
-    (grasped line + native answer of the new row) is decoded, always
-    against the ORIGINAL question. Returns (answer, mode) or None."""
+    back through the caller's engine path; Fate-sourced evidence
+    accumulates across variants (synthesis questions need several
+    grasped lines at once) and is decoded against the ORIGINAL
+    question. Returns (answer, mode) or None."""
     if regrasp is None:
         return None
+    ev: list[str] = list(base or [])
     for variant in mistral_head.variants(question):
         try:
             row = regrasp(variant)
@@ -198,12 +213,15 @@ def _regrasp(question: str, corpus: list[str], regrasp, *, weak: bool):
             continue
         if not isinstance(row, dict):
             continue
-        ev = build_evidence(question, corpus, row.get("retrieval_corpus_idx"),
-                            str(row.get("answer", "")))
+        for line in build_evidence(question, corpus,
+                                   row.get("retrieval_corpus_idx"),
+                                   str(row.get("answer", ""))):
+            if line not in ev:
+                ev.append(line)
         if not ev:
             continue
-        decoded = mistral_head.decode(question, ev)
+        decoded = mistral_head.decode(question, ev[:4])
         if decoded and not _abstainish(decoded):
-            base = "mistral_weak_emit" if weak else "mistral"
-            return decoded, f"{base}_regrasp"
+            mode = "mistral_weak_emit" if weak else "mistral"
+            return decoded, f"{mode}_regrasp"
     return None
