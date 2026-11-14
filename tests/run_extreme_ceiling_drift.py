@@ -62,7 +62,7 @@ def drift(turns=60):
         row = (body.get("rows") or [{}])[0]
         fog = (row.get("fog_decision") or {}).get("decision", "")
         sess_corpus = list((sess or {}).get("corpus") or [])
-            ans, mode = hybrid.resolve(fog, qtext, sess_corpus,
+        ans, mode = hybrid.resolve(fog, qtext, sess_corpus,
                                        row.get("retrieval_corpus_idx"),
                                        str(row.get("answer", "")),
                                        fog_decision=row.get("fog_decision"),
