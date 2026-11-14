@@ -73,7 +73,9 @@ def run_arm(arm, corpus):
             # into the session, never the whole client-side corpus.
             sess_corpus = list((sess or {}).get("corpus") or [])
             answer, mode = hybrid.resolve(fog, qtext, sess_corpus,
-                                          row.get("retrieval_corpus_idx"), native)
+                                          row.get("retrieval_corpus_idx"), native,
+                                          fog_decision=row.get("fog_decision"),
+                                          fog_evidence=row.get("fog_evidence"))
             answer = f"[{mode}] {answer}"
         else:
             answer = native

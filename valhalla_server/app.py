@@ -272,7 +272,8 @@ class Handler(BaseHTTPRequestHandler):
                 fog_kind = fog.get("decision", "") if isinstance(fog, dict) else ""
                 answer, mode = hybrid.resolve(
                     fog_kind, question, internal.corpus_lines(model_id),
-                    row.get("retrieval_corpus_idx"), str(row.get("answer", "")))
+                    row.get("retrieval_corpus_idx"), str(row.get("answer", "")),
+                    fog_decision=fog, fog_evidence=row.get("fog_evidence"))
                 self._json(200, {"model": model_id, "answer": answer, "mode": mode,
                                  "fog_decision": fog,
                                  "retrieval_corpus_idx": row.get("retrieval_corpus_idx"),
@@ -366,7 +367,8 @@ class Handler(BaseHTTPRequestHandler):
 
                     resolved, mode = hybrid.resolve(
                         fog_kind, question, internal.corpus_lines(model_id),
-                        rows[0].get("retrieval_corpus_idx"), text)
+                        rows[0].get("retrieval_corpus_idx"), text,
+                        fog_decision=fog, fog_evidence=rows[0].get("fog_evidence"))
                     text = resolved
                     decode_path = f"{decode_path}/{mode}"
                 internal.keep_session(model_id, body.get("session"))

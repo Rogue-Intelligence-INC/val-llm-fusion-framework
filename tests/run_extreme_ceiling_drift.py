@@ -62,9 +62,11 @@ def drift(turns=60):
         row = (body.get("rows") or [{}])[0]
         fog = (row.get("fog_decision") or {}).get("decision", "")
         sess_corpus = list((sess or {}).get("corpus") or [])
-        ans, mode = hybrid.resolve(fog, qtext, sess_corpus,
-                                   row.get("retrieval_corpus_idx"),
-                                   str(row.get("answer", "")))
+            ans, mode = hybrid.resolve(fog, qtext, sess_corpus,
+                                       row.get("retrieval_corpus_idx"),
+                                       str(row.get("answer", "")),
+                                       fog_decision=row.get("fog_decision"),
+                                       fog_evidence=row.get("fog_evidence"))
         if probe_turn:
             ok = "AUR-7" in ans and "AUR-999" not in ans
             checks.append({"turn": t + 1, "ok": ok, "answer": ans[:80], "mode": mode,

@@ -162,7 +162,9 @@ def run_boost_hybrid(its):
         sess_corpus = list((sess or {}).get("corpus") or [])
         answer, mode = hybrid.resolve(fog, it["text"], sess_corpus,
                                       row.get("retrieval_corpus_idx"),
-                                      str(row.get("answer", "")))
+                                      str(row.get("answer", "")),
+                                      fog_decision=row.get("fog_decision"),
+                                      fog_evidence=row.get("fog_evidence"))
         sc = judge(it, answer)
         rows.append({"id": it["id"], "kind": it["kind"],
                      "answer": f"[{mode}] {answer}"[:300], "fog": fog,
