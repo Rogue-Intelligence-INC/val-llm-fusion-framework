@@ -72,16 +72,8 @@ def run_arm(arm, corpus):
             # Production-faithful evidence: only lines actually ingested
             # into the session, never the whole client-side corpus.
             sess_corpus = list((sess or {}).get("corpus") or [])
-            def _regrasp(variant, _c=list(sess_corpus)):
-                b = post(ENGINE, {"questions": [{"id": "rg", "text": variant, "score_type": "open"}],
-                                  "config": CONFIG, "context": _c})
-                return (b.get("rows") or [{}])[0]
-
             answer, mode = hybrid.resolve(fog, qtext, sess_corpus,
-                                          row.get("retrieval_corpus_idx"), native,
-                                          fog_decision=row.get("fog_decision"),
-                                          fog_evidence=row.get("fog_evidence"),
-                                          regrasp=_regrasp)
+                                          row.get("retrieval_corpus_idx"), native)
             answer = f"[{mode}] {answer}"
         else:
             answer = native

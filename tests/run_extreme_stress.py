@@ -234,9 +234,7 @@ def run_size(n_lines, arms=("native", "hybrid", "mistral")):
                 fog = (row.get("fog_decision") or {}).get("decision", "")
                 answer, mode = hybrid.resolve(fog, qtext, corpus,
                                               row.get("retrieval_corpus_idx"),
-                                              str(row.get("answer", "")),
-                                              fog_decision=row.get("fog_decision"),
-                                              fog_evidence=row.get("fog_evidence"))
+                                              str(row.get("answer", "")))
                 answer = f"[{mode}] {answer}"
             else:
                 answer, err = mistral_full(corpus, qtext)

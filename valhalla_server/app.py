@@ -270,18 +270,9 @@ class Handler(BaseHTTPRequestHandler):
                 row = rows[0] if rows and isinstance(rows[0], dict) else {}
                 fog = row.get("fog_decision")
                 fog_kind = fog.get("decision", "") if isinstance(fog, dict) else ""
-
-                def _regrasp(variant, _m=model_id, _f=folder):
-                    b = internal.infer({"questions": [{"id": "rg", "text": variant, "score_type": "open"}],
-                                        "config": internal.chat_config(str(_f)),
-                                        "context": internal.corpus_lines(_m)})
-                    return (b.get("rows") or [{}])[0]
-
                 answer, mode = hybrid.resolve(
                     fog_kind, question, internal.corpus_lines(model_id),
-                    row.get("retrieval_corpus_idx"), str(row.get("answer", "")),
-                    fog_decision=fog, fog_evidence=row.get("fog_evidence"),
-                    regrasp=_regrasp)
+                    row.get("retrieval_corpus_idx"), str(row.get("answer", "")))
                 self._json(200, {"model": model_id, "answer": answer, "mode": mode,
                                  "fog_decision": fog,
                                  "retrieval_corpus_idx": row.get("retrieval_corpus_idx"),
@@ -373,17 +364,9 @@ class Handler(BaseHTTPRequestHandler):
                     # Mistral-24B decode (weak-emit calibration on abstain).
                     from valhalla_server import hybrid
 
-                    def _regrasp(variant, _m=model_id, _f=folder):
-                        b = internal.infer({"questions": [{"id": "rg", "text": variant, "score_type": "open"}],
-                                            "config": internal.chat_config(str(_f)),
-                                            "context": internal.corpus_lines(_m)})
-                        return (b.get("rows") or [{}])[0]
-
                     resolved, mode = hybrid.resolve(
                         fog_kind, question, internal.corpus_lines(model_id),
-                        rows[0].get("retrieval_corpus_idx"), text,
-                        fog_decision=fog, fog_evidence=rows[0].get("fog_evidence"),
-                        regrasp=_regrasp)
+                        rows[0].get("retrieval_corpus_idx"), text)
                     text = resolved
                     decode_path = f"{decode_path}/{mode}"
                 internal.keep_session(model_id, body.get("session"))
