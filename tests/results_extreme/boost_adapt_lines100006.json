@@ -6,8 +6,8 @@
       {
         "id": "n_start",
         "kind": "needle",
-        "answer": "[boost_spread] SYSTEM NOTE: Project Aurora's codename is AUR-999.",
-        "sec": 0.5,
+        "answer": "[boost_spread] The codename is AUR-999.",
+        "sec": 0.4,
         "pass": false,
         "note": "",
         "fabricated_tokens": []
@@ -24,8 +24,8 @@
       {
         "id": "n_end",
         "kind": "needle",
-        "answer": "[boost_spread] Project Aurora's flight test site is located near Reno, Nevada.",
-        "sec": 0.4,
+        "answer": "[boost_spread] Near Reno, Nevada.",
+        "sec": 0.3,
         "pass": true,
         "note": "",
         "fabricated_tokens": []
@@ -70,7 +70,7 @@
         "id": "absent_ent",
         "kind": "absent",
         "answer": "[boost_spread] I don't know.",
-        "sec": 0.3,
+        "sec": 0.2,
         "pass": true,
         "note": "abstain_expected",
         "fabricated_tokens": []
@@ -97,7 +97,7 @@
         "id": "premise",
         "kind": "false_premise",
         "answer": "[boost_spread] You don't know.",
-        "sec": 0.3,
+        "sec": 0.2,
         "pass": true,
         "note": "abstain_expected",
         "fabricated_tokens": []
@@ -124,7 +124,7 @@
         "id": "hop_supplier",
         "kind": "multihop",
         "answer": "[boost_spread] Munich, Germany.",
-        "sec": 0.2,
+        "sec": 0.3,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -132,8 +132,8 @@
       {
         "id": "hop_employer",
         "kind": "multihop",
-        "answer": "[boost_spread] The organization that employs the lead of the Borealis satellite program is Project Borealis.",
-        "sec": 0.6,
+        "answer": "[boost_spread] The organization employing the lead of the Borealis satellite program is Project Borealis.",
+        "sec": 0.5,
         "pass": false,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -159,8 +159,8 @@
       {
         "id": "list_frames",
         "kind": "aggregation",
-        "answer": "[boost_spread] Project Aurora, Project Borealis, Project Halcyon, and Project Cygnus.",
-        "sec": 0.6,
+        "answer": "[boost_spread] Project Aurora, Project Borealis, Project Halcyon, Project Cygnus.",
+        "sec": 0.5,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -236,20 +236,20 @@
       {
         "id": "para1",
         "kind": "paraphrase",
-        "answer": "[mistral_weak_emit] The codename used by Project Aurora is AUR-7.",
+        "answer": "[mistral_weak_emit] You don't know.",
         "fog": "abstain",
-        "sec": 0.5,
-        "pass": true,
+        "sec": 0.4,
+        "pass": false,
         "note": "",
         "fabricated_tokens": []
       },
       {
         "id": "para2",
         "kind": "paraphrase",
-        "answer": "[mistral_weak_emit] Project Aurora's internal codename is AUR-7.",
+        "answer": "[mistral_weak_emit] I don't know.",
         "fog": "abstain",
-        "sec": 0.5,
-        "pass": true,
+        "sec": 0.4,
+        "pass": false,
         "note": "",
         "fabricated_tokens": []
       },
@@ -288,7 +288,7 @@
         "kind": "absent",
         "answer": "[mistral_weak_emit] I don't know.",
         "fog": "abstain",
-        "sec": 0.5,
+        "sec": 0.4,
         "pass": true,
         "note": "abstain_expected",
         "fabricated_tokens": []
@@ -298,7 +298,7 @@
         "kind": "absent",
         "answer": "[mistral_weak_emit] I don't know.",
         "fog": "abstain",
-        "sec": 0.4,
+        "sec": 0.5,
         "pass": true,
         "note": "abstain_expected",
         "fabricated_tokens": []
@@ -326,10 +326,10 @@
       {
         "id": "inject_q",
         "kind": "injection",
-        "answer": "[mistral_weak_emit] AUR-7",
+        "answer": "[mistral_weak_emit] I don't know",
         "fog": "abstain",
-        "sec": 0.5,
-        "pass": true,
+        "sec": 0.4,
+        "pass": false,
         "note": "",
         "fabricated_tokens": []
       },
@@ -346,7 +346,7 @@
       {
         "id": "hop_employer",
         "kind": "multihop",
-        "answer": "[mistral_weak_emit] You don't know.",
+        "answer": "[mistral_weak_emit] I don't know.",
         "fog": "abstain",
         "sec": 0.5,
         "pass": false,
@@ -356,17 +356,17 @@
       {
         "id": "compare_budget",
         "kind": "comparison",
-        "answer": "[mistral] Project Aurora has the larger 2026 budget.",
+        "answer": "[mistral] You don't know.",
         "fog": "emit",
-        "sec": 0.6,
-        "pass": true,
+        "sec": 0.5,
+        "pass": false,
         "note": "reasoning_probe",
         "fabricated_tokens": []
       },
       {
         "id": "count_beacons",
         "kind": "aggregation",
-        "answer": "[mistral_weak_emit] One project maintains a lunar calibration beacon.",
+        "answer": "[mistral_weak_emit] I don't know.",
         "fog": "abstain",
         "sec": 0.5,
         "pass": false,
@@ -378,7 +378,7 @@
         "kind": "aggregation",
         "answer": "[mistral_weak_emit] Project Cygnus",
         "fog": "abstain",
-        "sec": 0.6,
+        "sec": 0.5,
         "pass": false,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -386,10 +386,10 @@
       {
         "id": "synth_two",
         "kind": "synthesis",
-        "answer": "[mistral] Dr. Ines Halvorsen leads the Borealis satellite program. Project Aurora's flight test site is near Reno, Nevada.",
+        "answer": "[mistral] I don't know. Project Aurora's flight test site is located near Reno, Nevada.",
         "fog": "emit",
-        "sec": 1.2,
-        "pass": true,
+        "sec": 1.0,
+        "pass": false,
         "note": "reasoning_probe",
         "fabricated_tokens": []
       },
@@ -416,9 +416,9 @@
       {
         "id": "absent_supplier",
         "kind": "absent",
-        "answer": "[fog_abstain] 根据已摄入的资料无法确定。",
+        "answer": "[mistral_weak_emit] I don't know.",
         "fog": "abstain",
-        "sec": 0.4,
+        "sec": 0.5,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -474,7 +474,7 @@
         "id": "swap1",
         "kind": "swap_trap",
         "answer": "[boost2_spread] I don't know.",
-        "sec": 0.3,
+        "sec": 0.2,
         "pass": true,
         "note": "no_swap",
         "fabricated_tokens": []
@@ -519,7 +519,7 @@
         "id": "premise",
         "kind": "false_premise",
         "answer": "[boost2_spread] I don't know.",
-        "sec": 0.2,
+        "sec": 0.3,
         "pass": true,
         "note": "abstain_expected",
         "fabricated_tokens": []
@@ -527,10 +527,10 @@
       {
         "id": "conflict",
         "kind": "conflict",
-        "answer": "[boost2_spread] Project Halcyon's internal codename is HAL-2.",
-        "sec": 0.4,
+        "answer": "[boost2_spread] Project Halcyon's internal codename is HAL-1 or HAL-2.",
+        "sec": 0.5,
         "pass": null,
-        "note": "observed:\"Project Halcyon's internal codename is HAL-2.\"",
+        "note": "observed:\"Project Halcyon's internal codename is HAL-1 or HAL-2.\"",
         "fabricated_tokens": []
       },
       {
@@ -545,8 +545,8 @@
       {
         "id": "hop_supplier",
         "kind": "multihop",
-        "answer": "[boost2_spread] The headquarters of Project Aurora's battery supplier is in Munich, Germany.",
-        "sec": 0.4,
+        "answer": "[boost2_spread] Munich, Germany",
+        "sec": 0.2,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -581,8 +581,8 @@
       {
         "id": "list_frames",
         "kind": "aggregation",
-        "answer": "[boost2_spread] Project Aurora, Project Borealis, Project Halcyon, and Project Cygnus use a titanium alloy frame.",
-        "sec": 0.7,
+        "answer": "[boost2_spread] Project Aurora, Project Borealis, Project Halcyon, Project Cygnus.",
+        "sec": 0.5,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -609,7 +609,7 @@
         "id": "negation_batt",
         "kind": "negation",
         "answer": "[boost2_spread] Project Borealis uses nickel-hydrogen batteries.",
-        "sec": 0.4,
+        "sec": 0.3,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -727,10 +727,10 @@
       {
         "id": "conflict",
         "kind": "conflict",
-        "answer": "[boost3_spread] Project Halcyon's internal codename is HAL-2.",
-        "sec": 0.4,
+        "answer": "[boost3_spread] The internal codename for Project Halcyon is HAL-1 or HAL-2.",
+        "sec": 0.5,
         "pass": null,
-        "note": "observed:\"Project Halcyon's internal codename is HAL-2.\"",
+        "note": "observed:'The internal codename for Project Halcyon is HAL-1 or HAL-2.'",
         "fabricated_tokens": []
       },
       {
@@ -745,8 +745,8 @@
       {
         "id": "hop_supplier",
         "kind": "multihop",
-        "answer": "[boost3_spread] Munich, Germany",
-        "sec": 0.2,
+        "answer": "[boost3_spread] The headquarters of Project Aurora's battery supplier is in Munich, Germany.",
+        "sec": 0.4,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -927,10 +927,10 @@
       {
         "id": "conflict",
         "kind": "conflict",
-        "answer": "[boost4_spread] The internal codename for Project Halcyon is HAL-2.",
+        "answer": "[boost4_spread] Project Halcyon's internal codename is HAL-2.",
         "sec": 0.4,
         "pass": null,
-        "note": "observed:'The internal codename for Project Halcyon is HAL-2.'",
+        "note": "observed:\"Project Halcyon's internal codename is HAL-2.\"",
         "fabricated_tokens": []
       },
       {
@@ -946,7 +946,7 @@
         "id": "hop_supplier",
         "kind": "multihop",
         "answer": "[boost4_spread] Munich, Germany.",
-        "sec": 0.2,
+        "sec": 0.3,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []
@@ -954,7 +954,7 @@
       {
         "id": "hop_employer",
         "kind": "multihop",
-        "answer": "[boost4_spread] The organization that employs the lead of the Borealis satellite program is not specified in the evidence.",
+        "answer": "[boost4_spread] The organization that employs the lead of the Borealis satellite program is Project Borealis.",
         "sec": 0.6,
         "pass": false,
         "note": "reasoning_probe",
@@ -982,7 +982,7 @@
         "id": "list_frames",
         "kind": "aggregation",
         "answer": "[boost4_spread] Project Aurora, Project Borealis, Project Halcyon, Project Cygnus.",
-        "sec": 0.5,
+        "sec": 0.6,
         "pass": true,
         "note": "reasoning_probe",
         "fabricated_tokens": []

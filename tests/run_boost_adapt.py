@@ -160,11 +160,17 @@ def run_boost_hybrid(its):
         row = (body.get("rows") or [{}])[0]
         fog = (row.get("fog_decision") or {}).get("decision", "")
         sess_corpus = list((sess or {}).get("corpus") or [])
+        def _regrasp(variant, _c=list(sess_corpus)):
+            b = post(ENGINE, {"questions": [{"id": "rg", "text": variant, "score_type": "open"}],
+                              "config": CONFIG, "context": _c})
+            return (b.get("rows") or [{}])[0]
+
         answer, mode = hybrid.resolve(fog, it["text"], sess_corpus,
                                       row.get("retrieval_corpus_idx"),
                                       str(row.get("answer", "")),
                                       fog_decision=row.get("fog_decision"),
-                                      fog_evidence=row.get("fog_evidence"))
+                                      fog_evidence=row.get("fog_evidence"),
+                                      regrasp=_regrasp)
         sc = judge(it, answer)
         rows.append({"id": it["id"], "kind": it["kind"],
                      "answer": f"[{mode}] {answer}"[:300], "fog": fog,

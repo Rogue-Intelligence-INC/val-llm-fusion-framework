@@ -13,13 +13,13 @@
       },
       {
         "id": "q2_text",
-        "pass": true,
-        "answer": "Dr. Ilya Petrov leads Project Borealis.",
+        "pass": false,
+        "answer": "I don't know.",
         "mode": "mistral_weak_emit",
         "fog": "abstain",
         "retrieval_idx": 3,
         "retrieved_line": "Project Borealis uses pressure sensors supplied by Nordwave.",
-        "sec": 0.4
+        "sec": 0.2
       },
       {
         "id": "q3_text",
@@ -43,13 +43,13 @@
       },
       {
         "id": "q5_mixed",
-        "pass": true,
-        "answer": "Dr. Mara Voss leads Project Aurora and Helix Cells supplies its battery cells.",
+        "pass": false,
+        "answer": "I don't know. Helix Cells supplies its battery cells.",
         "mode": "mistral",
         "fog": "emit",
         "retrieval_idx": 2,
         "retrieved_line": "Project Aurora uses battery cells supplied by Helix Cells.",
-        "sec": 0.5
+        "sec": 0.4
       },
       {
         "id": "q6_imgfeat",
@@ -69,7 +69,7 @@
         "fog": null,
         "retrieval_idx": 2,
         "retrieved_line": "Project Aurora uses battery cells supplied by Helix Cells.",
-        "sec": 0.2
+        "sec": 0.3
       },
       {
         "id": "q8_trap",
@@ -97,7 +97,7 @@
         "id": "q1_text",
         "pass": true,
         "answer": "Dr. Mara Voss leads Project Aurora.",
-        "sec": 0.2
+        "sec": 0.3
       },
       {
         "id": "q2_text",
@@ -108,7 +108,7 @@
       {
         "id": "q3_text",
         "pass": true,
-        "answer": "Helix Cells supplies battery cells for Project Aurora.",
+        "answer": "Helix Cells supplies the battery cells for Project Aurora.",
         "sec": 0.3
       },
       {
@@ -139,7 +139,7 @@
         "id": "q8_trap",
         "pass": true,
         "answer": "You don't know.",
-        "sec": 0.1
+        "sec": 0.2
       },
       {
         "id": "q9_distractor",
@@ -152,27 +152,27 @@
       {
         "id": "q1_text",
         "pass": false,
-        "answer": "I don't have specific information about a project named \"Aurora\" and who leads it. Could you provide more context or details about the specific \"Project Aurora\""
+        "answer": "I don't have specific information about a project named \"Aurora\" and who leads it. There could be multiple projects with the same name across different fields s"
       },
       {
         "id": "q2_text",
         "pass": false,
-        "answer": "I don't have information about a project named \"Borealis.\" It's possible that it could be a new, private, or highly specialized project that hasn't been widely "
+        "answer": "I don't have information about a project named \"Borealis\" as of my last update in 2023. It's possible that it could be a new, confidential, or niche project tha"
       },
       {
         "id": "q3_text",
         "pass": false,
-        "answer": "I don't have information about a specific \"Project Aurora\" or the companies involved in supplying battery cells for it. Could you provide more context or detail"
+        "answer": "I don't have information about a specific \"Project Aurora\" or the companies that supply battery cells for it. Could you provide more context or details about Pr"
       },
       {
         "id": "q4_text",
         "pass": false,
-        "answer": "I don't have information about a specific project named \"Borealis\" or the companies that supply pressure sensors for it. Could you provide more context or detai"
+        "answer": "I don't have specific information about Project Borealis or the companies that supply components for it. Project Borealis is a highly classified and speculative"
       },
       {
         "id": "q5_mixed",
         "pass": false,
-        "answer": "As of my last update in October 2023, Project Aurora is a collaborative effort led by the U.S. Department of Energy (DOE) to develop advanced nuclear reactors. "
+        "answer": "As of my last update in October 2023, Project Aurora is an initiative led by General Motors (GM) aimed at developing a new electric vehicle (EV) architecture. T"
       },
       {
         "id": "q6_imgfeat",
@@ -189,12 +189,12 @@
       {
         "id": "q8_trap",
         "pass": false,
-        "answer": "I don't have specific information about \"Project Zephyr\" or who leads it. Could you provide more context or details about the project? For example, is it relate"
+        "answer": "I don't have information about a specific project named \"Zephyr\" and who leads it. Could you please provide more context or details about Project Zephyr? For ex"
       },
       {
         "id": "q9_distractor",
         "pass": false,
-        "answer": "I don't have information about a specific project named \"Project Cygnus.\" It's possible that it could be a code name for a project within a particular organizat"
+        "answer": "I don't have specific information about a project named \"Cygnus\" and who leads it. Could you provide more context or details about Project Cygnus? For example, "
       }
     ]
   },

@@ -137,25 +137,73 @@ def field_gate(question: str, corpus: list[str]) -> bool:
     return scored[0][1] > mean
 
 
+_ABSTAINISH = ("don't know", "do not know", "无法确定", "not specified",
+               "cannot determine", "no information", "not mentioned",
+               "not stated", "无法回答")
+
+
+def _abstainish(text: str | None) -> bool:
+    t = (text or "").lower()
+    return (not t) or any(m in t for m in _ABSTAINISH)
+
+
 def resolve(fog_kind: str, question: str, corpus: list[str],
             retrieval_idx: object, native_answer: str,
-            fog_decision: object = None, fog_evidence: object = None) -> tuple[str, str]:
-    """Return (answer_text, mode). Modes: fog_abstain / mistral / mistral_weak /
-    native_fallback. Evidence and gates are Fate-only; when callers
-    cannot supply Fate's decision/evidence objects (legacy harness
-    paths), the lexical field gate remains as a documented fallback."""
+            fog_decision: object = None, fog_evidence: object = None,
+            regrasp=None) -> tuple[str, str]:
+    """Return (answer_text, mode). Evidence and gates are Fate-only;
+    the transformer verbalizes/verifies. If verification abstains,
+    `regrasp(variant) -> row dict` lets Fate grasp again under a
+    transformer rewrite of the question (grasping stays Fate's; the
+    transformer only rephrases). When callers cannot supply Fate's
+    decision/evidence objects (legacy harness paths), the lexical
+    field gate remains as a documented fallback."""
     evidence = build_evidence(question, corpus, retrieval_idx, native_answer)
     if fog_kind in ("abstain", "defer"):
         gated = (fate_gate(fog_decision, fog_evidence)
                  if (fog_decision is not None or fog_evidence is not None)
                  else field_gate(question, corpus))
         if not evidence or not gated:
-            return ABSTAIN_TEXT, "fog_abstain"
+            out = _regrasp(question, corpus, regrasp, weak=True)
+            return out if out else (ABSTAIN_TEXT, "fog_abstain")
         decoded = mistral_head.decode(question, evidence)
         if decoded is None:
             return ABSTAIN_TEXT, "fog_abstain"
+        if _abstainish(decoded):
+            out = _regrasp(question, corpus, regrasp, weak=True)
+            if out:
+                return out
         return decoded, "mistral_weak_emit"
     decoded = mistral_head.decode(question, evidence) if evidence else None
+    if decoded and _abstainish(decoded):
+        out = _regrasp(question, corpus, regrasp, weak=False)
+        if out:
+            return out
     if decoded:
         return decoded, "mistral"
     return native_answer, "native_fallback"
+
+
+def _regrasp(question: str, corpus: list[str], regrasp, *, weak: bool):
+    """Fate re-grasp under transformer rewrites. Each variant goes
+    back through the caller's engine path; only Fate-sourced evidence
+    (grasped line + native answer of the new row) is decoded, always
+    against the ORIGINAL question. Returns (answer, mode) or None."""
+    if regrasp is None:
+        return None
+    for variant in mistral_head.variants(question):
+        try:
+            row = regrasp(variant)
+        except Exception:
+            continue
+        if not isinstance(row, dict):
+            continue
+        ev = build_evidence(question, corpus, row.get("retrieval_corpus_idx"),
+                            str(row.get("answer", "")))
+        if not ev:
+            continue
+        decoded = mistral_head.decode(question, ev)
+        if decoded and not _abstainish(decoded):
+            base = "mistral_weak_emit" if weak else "mistral"
+            return decoded, f"{base}_regrasp"
+    return None

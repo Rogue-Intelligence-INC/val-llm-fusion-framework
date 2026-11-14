@@ -37,6 +37,43 @@ def available(timeout: float = 3.0) -> bool:
         return False
 
 
+def variants(question: str, timeout: float = 120.0) -> list[str]:
+    """Transformer-side question rewrites for Fate re-grasping: up to
+    two simpler direct factual rewrites / sub-questions. The rewrites
+    never answer anything; they only re-ask so Fate can grasp again
+    in its own terms (paraphrase brittleness lives in phrasing)."""
+    if not ENABLED:
+        return []
+    payload = {
+        "model": MODEL,
+        "messages": [
+            {"role": "system", "content":
+             "You rewrite questions for a retrieval system. Output up to 2 "
+             "simpler, direct factual rewrites or sub-questions of the "
+             "user question, one per line, no numbering, no answers, "
+             "keep all names and codenames exactly as written."},
+            {"role": "user", "content": question},
+        ],
+        "temperature": 0.2,
+        "max_tokens": 120,
+    }
+    try:
+        req = urllib.request.Request(URL, data=json.dumps(payload).encode(),
+                                     headers={"Content-Type": "application/json"},
+                                     method="POST")
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            body = json.loads(resp.read().decode())
+        text = body["choices"][0]["message"]["content"].strip()
+    except Exception:
+        return []
+    out = []
+    for line in text.splitlines():
+        line = line.strip(" -0123456789.、")
+        if line and line.lower() != question.strip().lower() and line not in out:
+            out.append(line)
+    return out[:2]
+
+
 def decode(question: str, evidence: list[str], timeout: float = 300.0) -> str | None:
     """Structure-guided decode: question + Valhalla-retrieved evidence only."""
     if not ENABLED or not evidence:
