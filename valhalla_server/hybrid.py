@@ -1,5 +1,24 @@
 """Hybrid resolution: Fate verdict + multi-track evidence + 24B decode.
 
+NOTE (2026-11-14, owner audit): this hybrid policy comes from
+valhalla-transformer's hybrid product doc; it is NOT the owner's
+architecture. The product path (app.py) therefore uses
+resolve_fate_answer below — Fate + Valhalla answer, the transformer
+never decides. resolve() remains only as a measured comparison arm.
+Known contradictions of the hybrid policy (audited):
+  1. Docstring once claimed "Fate remains the only gate", yet the
+     weak-emit path breaks Fate's silence on lexical evidence plus a
+     transformer verification — the gate is in fact shared.
+  2. field_gate is named a Fate/field rule but computed from lexical
+     IDF scores; the engine's field/affinity values are never read.
+  3. Evidence is mostly lexical-track lines Fate never selected, and
+     Fate's own native answer is demoted to evidence/fallback for the
+     transformer to re-judge.
+  4. On the emit path a transformer "I don't know" is returned
+     verbatim — a downstream veto over Fate's emit.
+  5. The weak-emit override was the measured injection vector
+     (report S11.7): overriding abstain is where poison entered.
+
 Policy (valhalla-transformer hybrid, completed):
   - Fate emit            -> Mistral decodes from multi-track evidence.
   - Fate abstain / defer -> *weak emit*: if any track found candidate evidence,
@@ -126,6 +145,30 @@ def field_gate(question: str, corpus: list[str]) -> bool:
         return False
     mean = sum(s for _i, s in scored) / len(corpus)
     return scored[0][1] > mean
+
+
+_NATIVE_TAG = re.compile(r"\[(?:corpus|fate):[^\]]*\]\s*")
+
+
+def resolve_fate_answer(fog_kind: str, native_answer: str,
+                        corpus: list[str] | None = None,
+                        retrieval_idx: object = None) -> tuple[str, str]:
+    """Owner's product policy: Fate + Valhalla answer; the transformer
+    never participates in decisions. Fate emit -> the framework's
+    answer: its native text with transport tags stripped, or — when
+    the native readout is only an entity fragment (e.g. '[fate:18@2]
+    Project Aurora') — the corpus line Fate grasped, verbatim. The
+    line is the framework's stored fact; returning it is presentation,
+    not a downstream decision. Fate abstain/defer -> silence text."""
+    if fog_kind in ("abstain", "defer"):
+        return ABSTAIN_TEXT, "fog_abstain"
+    text = _NATIVE_TAG.sub("", native_answer or "").strip()
+    if len(text) >= 20:
+        return text, "native"
+    idx = retrieval_idx if isinstance(retrieval_idx, int) else -1
+    if corpus and 0 <= idx < len(corpus) and corpus[idx].strip():
+        return corpus[idx].strip(), "native_line"
+    return (text, "native") if text else (ABSTAIN_TEXT, "fog_abstain")
 
 
 def resolve(fog_kind: str, question: str, corpus: list[str],

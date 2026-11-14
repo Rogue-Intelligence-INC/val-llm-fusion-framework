@@ -246,11 +246,10 @@ class Handler(BaseHTTPRequestHandler):
                     line_idx = registry[item_no].get("line_index")
                     if not isinstance(line_idx, int) or not (0 <= line_idx < len(corpus_now)):
                         continue
-                    from valhalla_server import mistral_head
-
-                    decoded = mistral_head.decode(
-                        f"About the media item described in the evidence: {question}",
-                        [corpus_now[line_idx]])
+                    # Feature grasp answers with the grasped corpus line
+                    # itself (owner policy: the framework answers; the
+                    # transformer does not verbalize or decide).
+                    decoded = corpus_now[line_idx]
                     if decoded:
                         self._json(200, {"model": model_id, "answer": decoded,
                                          "mode": "feature_grasp",
@@ -270,9 +269,10 @@ class Handler(BaseHTTPRequestHandler):
                 row = rows[0] if rows and isinstance(rows[0], dict) else {}
                 fog = row.get("fog_decision")
                 fog_kind = fog.get("decision", "") if isinstance(fog, dict) else ""
-                answer, mode = hybrid.resolve(
-                    fog_kind, question, internal.corpus_lines(model_id),
-                    row.get("retrieval_corpus_idx"), str(row.get("answer", "")))
+                answer, mode = hybrid.resolve_fate_answer(
+                    fog_kind, str(row.get("answer", "")),
+                    internal.corpus_lines(model_id),
+                    row.get("retrieval_corpus_idx"))
                 self._json(200, {"model": model_id, "answer": answer, "mode": mode,
                                  "fog_decision": fog,
                                  "retrieval_corpus_idx": row.get("retrieval_corpus_idx"),
@@ -360,13 +360,15 @@ class Handler(BaseHTTPRequestHandler):
                     fog = rows[0].get("fog_decision")
                     fog_decision = fog
                     fog_kind = fog.get("decision", "") if isinstance(fog, dict) else ""
-                    # Hybrid resolution: Fate verdict + multi-track evidence +
-                    # Mistral-24B decode (weak-emit calibration on abstain).
+                    # Owner policy: Fate + Valhalla answer; the transformer
+                    # never participates in decisions (no weak-emit override,
+                    # no decode re-judgment). The hybrid resolve() survives
+                    # only as a measured comparison arm in tests.
                     from valhalla_server import hybrid
 
-                    resolved, mode = hybrid.resolve(
-                        fog_kind, question, internal.corpus_lines(model_id),
-                        rows[0].get("retrieval_corpus_idx"), text)
+                    resolved, mode = hybrid.resolve_fate_answer(
+                        fog_kind, text, internal.corpus_lines(model_id),
+                        rows[0].get("retrieval_corpus_idx"))
                     text = resolved
                     decode_path = f"{decode_path}/{mode}"
                 internal.keep_session(model_id, body.get("session"))

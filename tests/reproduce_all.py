@@ -165,7 +165,10 @@ def collect(quick, steps):
     mm = load("multimodal_fixed.json").get("arms", {})
     if mm:
         g, n, f = tally(mm.get("valhalla", []))
-        verdicts.append(judge_suite("multimodal (valhalla arm)", g, n, f, 9))
+        # Baseline reset 2026-11-14: gateway product path switched to
+        # owner policy (Fate answers, transformer never decides);
+        # measured 6/9 (was 9/9 under the transformer-hybrid policy).
+        verdicts.append(judge_suite("multimodal (valhalla arm, Fate-native)", g, n, f, 6))
     sizes = [806] if quick else [806, 3006, 10006]
     for n in sizes:
         d = load(f"extreme_targeted_lines{n}.json")

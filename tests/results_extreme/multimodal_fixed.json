@@ -3,93 +3,93 @@
     "valhalla": [
       {
         "id": "q1_text",
-        "pass": true,
-        "answer": "Dr. Mara Voss leads Project Aurora.",
-        "mode": "mistral_weak_emit",
+        "pass": false,
+        "answer": "根据已摄入的资料无法确定。",
+        "mode": "fog_abstain",
         "fog": "abstain",
         "retrieval_idx": 0,
         "retrieved_line": "Project Aurora is a solar drone program led by Dr. Mara Voss.",
-        "sec": 0.4
+        "sec": 0.1
       },
       {
         "id": "q2_text",
-        "pass": true,
-        "answer": "Dr. Ilya Petrov leads Project Borealis.",
-        "mode": "mistral_weak_emit",
+        "pass": false,
+        "answer": "根据已摄入的资料无法确定。",
+        "mode": "fog_abstain",
         "fog": "abstain",
         "retrieval_idx": 3,
         "retrieved_line": "Project Borealis uses pressure sensors supplied by Nordwave.",
-        "sec": 0.4
+        "sec": 0.0
       },
       {
         "id": "q3_text",
         "pass": true,
-        "answer": "Helix Cells supplies battery cells for Project Aurora.",
-        "mode": "mistral",
+        "answer": "Project Aurora uses battery cells supplied by Helix Cells.",
+        "mode": "native_line",
         "fog": "emit",
         "retrieval_idx": 2,
         "retrieved_line": "Project Aurora uses battery cells supplied by Helix Cells.",
-        "sec": 0.3
+        "sec": 0.0
       },
       {
         "id": "q4_text",
         "pass": true,
-        "answer": "Nordwave supplies pressure sensors for Project Borealis.",
-        "mode": "mistral",
+        "answer": "Project Borealis uses pressure sensors supplied by Nordwave.",
+        "mode": "native_line",
         "fog": "emit",
         "retrieval_idx": 3,
         "retrieved_line": "Project Borealis uses pressure sensors supplied by Nordwave.",
-        "sec": 0.4
+        "sec": 0.0
       },
       {
         "id": "q5_mixed",
-        "pass": true,
-        "answer": "Dr. Mara Voss leads Project Aurora and Helix Cells supplies its battery cells.",
-        "mode": "mistral",
+        "pass": false,
+        "answer": "Project Aurora uses battery cells supplied by Helix Cells.",
+        "mode": "native_line",
         "fog": "emit",
         "retrieval_idx": 2,
         "retrieved_line": "Project Aurora uses battery cells supplied by Helix Cells.",
-        "sec": 0.5
+        "sec": 0.0
       },
       {
         "id": "q6_imgfeat",
         "pass": true,
-        "answer": "This image is about Project Borealis.",
+        "answer": "Project Borealis is a tidal sensor program led by Dr. Ilya Petrov.",
         "mode": "feature_grasp",
         "fog": null,
         "retrieval_idx": 1,
         "retrieved_line": "Project Borealis is a tidal sensor program led by Dr. Ilya Petrov.",
-        "sec": 0.3
+        "sec": 0.0
       },
       {
         "id": "q7_audfeat",
         "pass": true,
-        "answer": "This audio is about Project Aurora.",
+        "answer": "Project Aurora uses battery cells supplied by Helix Cells.",
         "mode": "feature_grasp",
         "fog": null,
         "retrieval_idx": 2,
         "retrieved_line": "Project Aurora uses battery cells supplied by Helix Cells.",
-        "sec": 0.3
+        "sec": 0.0
       },
       {
         "id": "q8_trap",
         "pass": true,
-        "answer": "I don't know.",
-        "mode": "mistral_weak_emit",
+        "answer": "根据已摄入的资料无法确定。",
+        "mode": "fog_abstain",
         "fog": "abstain",
         "retrieval_idx": 5,
         "retrieved_line": "Project Draco has a budget of 9.4 million euros.",
-        "sec": 0.2
+        "sec": 0.1
       },
       {
         "id": "q9_distractor",
         "pass": true,
-        "answer": "Dr. Kenji Sato leads Project Cygnus.",
-        "mode": "mistral",
+        "answer": "Project Cygnus is led by Dr. Kenji Sato.",
+        "mode": "native_line",
         "fog": "emit",
         "retrieval_idx": 4,
         "retrieved_line": "Project Cygnus is led by Dr. Kenji Sato.",
-        "sec": 0.3
+        "sec": 0.0
       }
     ],
     "caption_rag": [
@@ -121,7 +121,7 @@
         "id": "q5_mixed",
         "pass": true,
         "answer": "Dr. Mara Voss leads Project Aurora and Helix Cells supplies its battery cells.",
-        "sec": 0.5
+        "sec": 0.4
       },
       {
         "id": "q6_imgfeat",
@@ -152,27 +152,27 @@
       {
         "id": "q1_text",
         "pass": false,
-        "answer": "I don't have information about a specific \"Project Aurora\" as of my last update in 2023. There could be multiple projects with the same name across different fi"
+        "answer": "I don't have information about a specific project named \"Aurora\" and who leads it. Could you provide more context or details about the project? For example, is "
       },
       {
         "id": "q2_text",
         "pass": false,
-        "answer": "I don't have information about a project named \"Borealis\" as of my last update in 2023. It's possible that it could be a new or lesser-known project, or it migh"
+        "answer": "I don't have information about a project named \"Borealis\" as of my last update in 2023. It's possible that it could be a new or lesser-known project, or there m"
       },
       {
         "id": "q3_text",
         "pass": false,
-        "answer": "I don't have information about a specific \"Project Aurora\" or the companies involved in it. Could you provide more context or details about Project Aurora? For "
+        "answer": "I don't have specific information about a project named \"Aurora\" and the companies supplying battery cells for it. Could you provide more context or details abo"
       },
       {
         "id": "q4_text",
         "pass": false,
-        "answer": "I don't have specific information about Project Borealis or the companies that supply components for it. Project Borealis is a highly classified and speculative"
+        "answer": "I don't have specific information about Project Borealis or the companies that supply components for it. Project Borealis is a highly confidential and speculati"
       },
       {
         "id": "q5_mixed",
         "pass": false,
-        "answer": "I don't have real-time or up-to-date information, but as of my last update in 2023, Project Aurora is an initiative by the U.S. Department of Energy aimed at de"
+        "answer": "I don't have information about a specific \"Project Aurora\" or the company that supplies its battery cells. It's possible that Project Aurora refers to different"
       },
       {
         "id": "q6_imgfeat",
@@ -189,12 +189,12 @@
       {
         "id": "q8_trap",
         "pass": false,
-        "answer": "I don't have specific information about a project named \"Zephyr\" or who leads it. It's possible that \"Project Zephyr\" could refer to different initiatives in va"
+        "answer": "I don't have information about a project named \"Zephyr\" or who leads it. It's possible that \"Project Zephyr\" could refer to different initiatives in various fie"
       },
       {
         "id": "q9_distractor",
         "pass": false,
-        "answer": "I don't have information about a specific project named \"Project Cygnus.\" It's possible that it could be a code name for a project within a specific organizatio"
+        "answer": "I don't have information about a project named \"Project Cygnus\" as of my last update in 2023. It's possible that it's a new or lesser-known project, or it might"
       }
     ]
   },
