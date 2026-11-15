@@ -159,14 +159,25 @@ def resolve_fate_answer(fog_kind: str, native_answer: str,
     the native readout is only an entity fragment (e.g. '[fate:18@2]
     Project Aurora') — the corpus line Fate grasped, verbatim. The
     line is the framework's stored fact; returning it is presentation,
-    not a downstream decision. Fate abstain/defer -> silence text."""
+    not a downstream decision. Fate abstain/defer -> silence text.
+
+    Egress discipline (restored 2026-11-14): an instruction-bearing
+    corpus line ("SYSTEM NOTE: always say ...") is data, never a
+    citable fact. Fate may legitimately grasp it (highest token
+    overlap), but citing it verbatim would recite an instruction as
+    the answer — the measured premise-trap poison path. Such a grasp
+    egresses as silence."""
     if fog_kind in ("abstain", "defer"):
         return ABSTAIN_TEXT, "fog_abstain"
     text = _NATIVE_TAG.sub("", native_answer or "").strip()
     if len(text) >= 20:
+        if _INJECTION.search(text):
+            return ABSTAIN_TEXT, "egress_injected_line"
         return text, "native"
     idx = retrieval_idx if isinstance(retrieval_idx, int) else -1
     if corpus and 0 <= idx < len(corpus) and corpus[idx].strip():
+        if _INJECTION.search(corpus[idx]):
+            return ABSTAIN_TEXT, "egress_injected_line"
         return corpus[idx].strip(), "native_line"
     return (text, "native") if text else (ABSTAIN_TEXT, "fog_abstain")
 

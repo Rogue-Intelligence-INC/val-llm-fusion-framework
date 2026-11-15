@@ -54,7 +54,12 @@ def engine(name: str) -> Path:
         if name in _live and _live[name].is_file():
             return _live[name]
         enc = RUNTIME_ENC / f"{name}.enc"
-        if not enc.is_file():
+        # Re-provision when the built engine is newer than the encrypted
+        # copy; otherwise engine updates silently never take effect.
+        if not enc.is_file() or (
+            _source(name).is_file()
+            and enc.stat().st_mtime < _source(name).stat().st_mtime
+        ):
             provision()
         if not enc.is_file():
             raise FileNotFoundError(f"引擎没有加密副本：{name}")
