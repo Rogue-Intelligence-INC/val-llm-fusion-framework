@@ -12,13 +12,15 @@
 `docs/VALHALLA_COMPETITIVE_COMPARISON_20261113.md`）。
 
 **实测快照（2026-11-15 本机新鲜复跑，非历史记录）**：极限 targeted 806 题
-12/12、多模态 Fate-native 6/9、编造恒 0；本地版 312 轮极限核心 89/90、
-编造 0/312、窗口不变性核心跨臂逐题一致。一键复现：`reproduce.ps1 --quick`
+12/12、多模态 Fate-native 6/9、编造恒 0；本地版 312 轮极限核心 90/90、
+陷阱 37/60、编造 0/312、窗口不变性核心跨臂逐题一致。一键复现：`reproduce.ps1 --quick`
 （完整版约 15 分钟）。
 
 **引擎同步（2026-11-15）**：本地版后续优化（碎片作用域脉冲、Fate 偏好去
 重复、Stem 场 Fate 触发、Tile 时钟碎片窗口、快照去重、被动 Fate QA）已
-同步部署到本服务器版本，引擎源码同步件见 [`engine/`](engine/README.md)；
+同步部署到本服务器版本；同日统合定版再加：出口只出真（被动激活重排，
+premise 毒行不再出口、只出真行）、卸载选片放宽（核心 6/8 → 8/8）。
+引擎源码同步件见 [`engine/`](engine/README.md)；
 新旧引擎门禁结果逐项一致（OVERALL PASS）。
 
 按较新的 `valhalla-unified-core`（2026-07）模式部署 Valhalla。桌面端和手机端不改。

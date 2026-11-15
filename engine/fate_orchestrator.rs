@@ -1654,7 +1654,12 @@ pub fn query_fragment_top_k(corpus_lines: usize) -> usize {
     if corpus_lines <= 32 {
         return base;
     }
-    corpus_lines.div_ceil(20).clamp(base, 32)
+    // Widened 2026-11-15 (unload-strength consolidation): the old
+    // /20 scaling starved repeated needles once fragments piled up
+    // (measured: n_mid repeats abstain at 14-18 fragments while the
+    // unload arm's wire stays ~0.2MB — selection, not wire, was the
+    // binding constraint). /5 keeps the 32 cap.
+    corpus_lines.div_ceil(5).clamp(base, 32)
 }
 
 /// Keyword-strong corpus lines always enter the retrieval candidate set
@@ -1667,7 +1672,7 @@ fn union_keyword_anchor_lines(
     if !dynamic_corpus_fragments_enabled() || corpus.is_empty() {
         return;
     }
-    let min_frac = env_f64("VALHALLA_FRAGMENT_KEYWORD_ANCHOR_FRAC", 0.35);
+    let min_frac = env_f64("VALHALLA_FRAGMENT_KEYWORD_ANCHOR_FRAC", 0.25);
     for (i, line) in corpus.iter().enumerate() {
         if keyword_overlap_score(question, line) >= min_frac
             && !selection.corpus_line_indices.contains(&i)

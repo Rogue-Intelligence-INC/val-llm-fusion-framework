@@ -42,7 +42,7 @@ LoCoMo leaderboard (same-question comparisons and boundaries:
 - Extreme targeted 806 questions: **12/12**, fabricated tokens **0**
   (identical on the previous and the newly synced engine).
 - Multimodal gateway, Fate-native arm: **6/9**, fabricated **0**.
-- Local 312-turn limits: core needles **89/90**, fabrication **0/312**,
+- Local 312-turn limits: core needles **90/90**, fabrication **0/312**,
   distractor questions answered 3/120 (silence is the default).
 - Window invariance: core answers identical across window arms,
   fabrication 0; a 356-line arm now ingests in ~1.2 s
@@ -71,8 +71,11 @@ Reproduce: `.\reproduce.ps1 --quick` (full battery ~15 min), or see
   are documented, including where Valhalla loses; we do not claim
   LoCoMo wins.
 - Proactive emission is not claimed.
-- Today's known failure: instruction-form poison under false-premise
-  questions can still be emitted (measured; under analysis, not
-  patched over).
+- False-premise questions: since the 2026-11-15 consolidation the
+  egress emits only the line Fate's passive activation ranks first,
+  and the measured poison line is no longer emitted (the true line
+  is). The 560-question battery still scores this item as a fail
+  under its abstain-oracle; the content failure is closed, the
+  oracle disagreement is documented, not hidden.
 
 Contact: licensing@rogue-intelligence.com

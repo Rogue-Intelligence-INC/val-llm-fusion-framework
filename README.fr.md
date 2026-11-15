@@ -45,7 +45,7 @@ et limites : `docs/VALHALLA_COMPETITIVE_COMPARISON_20261113.md`).
 - Extreme targeted, 806 questions : **12/12**, jetons fabriqués **0**
   (identique sur l'ancien moteur et le moteur nouvellement synchronisé).
 - Passerelle multimodale, bras Fate-native : **6/9**, fabriqués **0**.
-- Limites locales en 312 tours : aiguilles cœur **89/90**, fabrication
+- Limites locales en 312 tours : aiguilles cœur **90/90**, fabrication
   **0/312**, questions distractrices répondues 3/120 (le silence est
   le défaut).
 - Invariance de fenêtre : réponses cœur identiques entre bras de
@@ -78,8 +78,12 @@ voir `engine/README.md` pour la batterie du moteur local.
   RAG/Mem0 sont documentées, y compris là où Valhalla perd ; nous ne
   revendiquons aucune victoire LoCoMo.
 - L'émission proactive n'est pas revendiquée.
-- Échec connu à ce jour : sous question à fausse prémisse, une donnée
-  poison sous forme d'instruction peut encore être émise (mesuré ;
-  en analyse, non masqué par un correctif).
+- Questions à fausse prémisse : depuis la consolidation du
+  2026-11-15, la sortie n'émet que la ligne classée première par
+  l'activation passive de Fate, et la ligne poison mesurée n'est
+  plus émise (c'est la vraie ligne qui sort). La batterie de
+  560 questions compte toujours cet item comme un échec selon son
+  oracle d'abstention ; l'échec de contenu est clos, ce désaccord
+  d'oracle est documenté, non masqué.
 
 Contact : licensing@rogue-intelligence.com

@@ -1492,6 +1492,63 @@ fn decode_mcq(
     (format!("ANSWER: {}", best_letter), matches, decode_path)
 }
 
+/// Multi-line grasp width (feasibility experiment): how many top
+/// candidate lines the open decode emits as one grasp. Default 1 =
+/// the historical single-line grasp; the fog judgment (grasped idx,
+/// margins, block reading) is unchanged — only the emitted body
+/// widens.
+fn grasp_lines() -> usize {
+    std::env::var("VALHALLA_GRASP_LINES")
+        .ok()
+        .and_then(|v| v.parse::<usize>().ok())
+        .unwrap_or(1)
+        .clamp(1, 5)
+}
+
+/// Egress truth filter: within the grasp window (top-3), emit
+/// only the line Fate's own passive activation ranks highest,
+/// instead of the decode-top line. Default ON since the
+/// 2026-11-15 consolidation (measured: premise poison -> truth
+/// line only, limits core 89-90/90, traps 35 -> 37-38/60,
+/// fabrication 0; window 12 measured harmful — template fillers
+/// win on activation — so the window stays at 3). The override
+/// applies ONLY when the affinity is this question's passive
+/// capture (`affinity_passive`); stored feedback affinity in
+/// the non-passive regime measured harmful (unload A/B core
+/// 4/8 vs 8/8) and never reranks. A clear-preference margin
+/// (VALHALLA_GRASP_RERANK_MARGIN, default 0.005) guards noise.
+/// Disable with VALHALLA_GRASP_RERANK_FATE=0. The fog judgment
+/// still reads the decode grasp series.
+fn grasp_rerank_fate() -> bool {
+    std::env::var("VALHALLA_GRASP_RERANK_FATE")
+        .map(|v| {
+            let v = v.trim().to_ascii_lowercase();
+            !(v == "0" || v == "false" || v == "off")
+        })
+        .unwrap_or(true)
+}
+
+fn multi_line_body(
+    candidates: &[(usize, f64, usize)],
+    memories: &[MemoryEntry],
+    n: usize,
+) -> String {
+    let mut out: Vec<String> = Vec::new();
+    for (i, _, _) in candidates {
+        let m = &memories[*i];
+        if m.corpus_idx.is_none() {
+            continue;
+        }
+        if !out.contains(&m.text) {
+            out.push(m.text.clone());
+        }
+        if out.len() >= n {
+            break;
+        }
+    }
+    out.join("\n")
+}
+
 fn decode_open(
     memories: &[MemoryEntry],
     query_sig: &[f64],
@@ -1506,6 +1563,10 @@ fn decode_open(
     question: &str,
     prior_questions: &[String],
     corpus_line_affinity: &[f64],
+    // True only when `corpus_line_affinity` is this question's
+    // passive Fate capture (read-only activation), not stored
+    // feedback affinity written by earlier judgments.
+    affinity_passive: bool,
     multihop_v2: bool,
     session_tick: u64,
     baseline_tick: u64,
@@ -1596,7 +1657,53 @@ fn decode_open(
         })
         .collect();
 
-    if let Some((idx, score, _)) = candidates.first() {
+    // Egress truth filter (experiment): among the grasp window,
+    // pick the candidate Fate's own passive activation ranks
+    // highest; only that line is emitted.
+    let pick_pos = if grasp_rerank_fate() && affinity_passive {
+        let n = grasp_lines().max(3).min(candidates.len());
+        let aff_of = |pos: usize| -> f64 {
+            memories[candidates[pos].0]
+                .corpus_idx
+                .and_then(|i| corpus_line_affinity.get(i).copied())
+                .unwrap_or(0.0)
+        };
+        // Fate overrides the decode grasp only on a CLEAR passive
+        // activation preference: another window line must beat the
+        // decode pick's affinity by a noise-floor margin (default
+        // 0.005, VALHALLA_GRASP_RERANK_MARGIN). Measured 2026-11-15:
+        // premise poison 0.9708 vs truth 0.9794 (gap 0.0086, override
+        // correct); template fillers sit within ~0.004 of each other
+        // and stored feedback affinity within ~0.001 — sub-margin
+        // differences are template noise, so the decode order stands.
+        let margin = std::env::var("VALHALLA_GRASP_RERANK_MARGIN")
+            .ok()
+            .and_then(|v| v.trim().parse::<f64>().ok())
+            .filter(|v| v.is_finite() && *v >= 0.0)
+            .unwrap_or(0.005);
+        let mut best_pos = 0usize;
+        let mut best_aff = aff_of(0);
+        for pos in 1..n {
+            let a = aff_of(pos);
+            if a > best_aff + margin {
+                best_aff = a;
+                best_pos = pos;
+            }
+        }
+        if std::env::var_os("VALHALLA_GRASP_RERANK_DEBUG").is_some() {
+            let win: Vec<String> = (0..n)
+                .map(|pos| {
+                    let ci = memories[candidates[pos].0].corpus_idx;
+                    format!("pos{pos}:corpus={ci:?}:aff={:.4}", aff_of(pos))
+                })
+                .collect();
+            eprintln!("[grasp_rerank] pick={best_pos} window=[{}]", win.join(" "));
+        }
+        best_pos
+    } else {
+        0
+    };
+    if let Some((idx, score, _)) = candidates.get(pick_pos) {
         if *score < min_score {
             return (
                 "No confident match in incubated memory.".to_string(),
@@ -1651,6 +1758,11 @@ fn decode_open(
         } else {
             "open_retrieval_follow_up_aware"
         };
+        let decode_path = if pick_pos > 0 {
+            format!("{decode_path}_fate_rerank")
+        } else {
+            decode_path.to_string()
+        };
         if let Some(short) = extract_open_short_answer(question, &m.text) {
             return (
                 format_open_retrieval_answer(
@@ -1662,12 +1774,34 @@ fn decode_open(
             );
         }
         if let Some(span) = best_span(question, &m.text) {
+            if grasp_lines() > 1 && !grasp_rerank_fate() {
+                let body = multi_line_body(&candidates, memories, grasp_lines());
+                return (
+                    format_open_retrieval_answer(
+                        &cite, &m.text, &body, picked_idx, session_tick, baseline_tick,
+                    ),
+                    top,
+                    format!("{decode_path}_multiline"),
+                    picked_idx,
+                );
+            }
             return (
                 format_open_retrieval_answer(
                     &cite, &m.text, &span, picked_idx, session_tick, baseline_tick,
                 ),
                 top,
                 format!("{decode_path}_span"),
+                picked_idx,
+            );
+        }
+        if grasp_lines() > 1 && !grasp_rerank_fate() {
+            let body = multi_line_body(&candidates, memories, grasp_lines());
+            return (
+                format_open_retrieval_answer(
+                    &cite, &m.text, &body, picked_idx, session_tick, baseline_tick,
+                ),
+                top,
+                format!("{decode_path}_multiline"),
                 picked_idx,
             );
         }
@@ -1955,6 +2089,7 @@ pub fn run_native_qa(req: &NativeQaRequest) -> NativeQaResponse {
             &[],
             &[],
             false,
+            false,
             report.hub_signals,
             0,
         ),
@@ -2135,6 +2270,7 @@ pub(crate) fn decode_from_report(
     front: &DlFrontConfig,
     prior_questions: &[String],
     corpus_line_affinity: &[f64],
+    affinity_passive: bool,
     multihop_v2: bool,
 ) -> (String, Vec<NativeMatch>, String, Option<usize>) {
     let q_sig = memories
@@ -2227,6 +2363,7 @@ pub(crate) fn decode_from_report(
             question,
             prior_questions,
             corpus_line_affinity,
+            affinity_passive,
             multihop_v2,
             report.hub_signals,
             0,
@@ -2578,6 +2715,13 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
         });
 
         let mut fate_line_aff = snap.corpus_line_affinity.clone();
+        // Provenance for the egress rerank gate: true only when the
+        // affinity below is this question's passive capture. Stored
+        // snapshot affinity is post-judgment feedback and must never
+        // override the decode grasp (measured 2026-11-15: unload A/B
+        // core 8/8 without rerank vs 4/8 when feedback affinity was
+        // allowed to rerank in the non-passive regime).
+        let mut fate_aff_passive = false;
         if open_fate && q.score_type == "open" {
             // Always build Fate refs from full corpus when full-feed; never fragment-truncate.
             let fate_src = if fate_full_feed {
@@ -2611,6 +2755,7 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
                     );
                     if !captured.is_empty() {
                         fate_line_aff = captured;
+                        fate_aff_passive = true;
                     }
                 } else {
                     let _fate_adapt = crate::multihop_fate::run_multihop_fate_adapt(
@@ -2632,6 +2777,8 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
         } else {
             &snap.corpus_line_affinity
         };
+        let line_aff_passive =
+            open_fate && q.score_type == "open" && fate_aff_passive;
 
         let (report, mcq_fate_meta, pipeline_outcome, mut answer, top, mut decode_path, retrieval_corpus_idx) =
             if use_natural {
@@ -2643,6 +2790,7 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
                     question_ports,
                     &memories,
                     line_aff_slice,
+                    line_aff_passive,
                     &mode_label,
                     req.qa_cycles,
                     &mode,
@@ -2668,6 +2816,7 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
                     &front,
                     prior,
                     line_aff_slice,
+                    line_aff_passive,
                     multihop_v2,
                 );
                 (
@@ -2725,6 +2874,7 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
                             &front,
                             prior,
                             line_aff_slice,
+                            line_aff_passive,
                             multihop_v2,
                         );
                         let (ans, path) = pipeline::merge_mcq_pipeline_decode(
@@ -2745,6 +2895,7 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
                             &front,
                             prior,
                             line_aff_slice,
+                            line_aff_passive,
                             multihop_v2,
                         );
                         (a, t, format!("pipeline_v4_{}", q.score_type), ridx)
@@ -2778,6 +2929,7 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
                     &front,
                     prior,
                     line_aff_slice,
+                    line_aff_passive,
                     multihop_v2,
                 );
                 (
@@ -2802,6 +2954,7 @@ pub fn run_native_qa_batch(req: &NativeQaBatchRequest) -> NativeQaBatchResponse 
                     &front,
                     prior,
                     line_aff_slice,
+                    line_aff_passive,
                     multihop_v2,
                 );
                 (report, None, None, answer, top, decode_path, retrieval_corpus_idx)
