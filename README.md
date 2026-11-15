@@ -1,6 +1,25 @@
 # Val-LLM 拆解融合框架
 
+**中文** | [English](README.en.md) | [日本語](README.ja.md) | [Français](README.fr.md)
+
 `valhalla-server` —— 把任意 LLM 按层拆解、经 Fate 体系适配、与文/声/图多模态自由融合、再烘焙回权重并以结构会话服务的框架。
+
+**定位（2026-11-14 裁定）**：Valhalla 是 **Fate 原生长时程记忆基座**——它不检索、
+不生成；经验被动收敛成区块（bundle），以场强度（能量·√复杂度）抓取，由 Fate
+自己的簇方程裁决"答 / 沉默"，判后学在使用时长中训练这个裁决者。它卖的是
+零编造、沉默纪律与行为平稳性，不是问答准确率。它**不是**聊天记忆 API、
+不是 RAG 的替代品、不参加 LoCoMo 榜单竞争（同题实测对比与边界见
+`docs/VALHALLA_COMPETITIVE_COMPARISON_20261113.md`）。
+
+**实测快照（2026-11-15 本机新鲜复跑，非历史记录）**：极限 targeted 806 题
+12/12、多模态 Fate-native 6/9、编造恒 0；本地版 312 轮极限核心 89/90、
+编造 0/312、窗口不变性核心跨臂逐题一致。一键复现：`reproduce.ps1 --quick`
+（完整版约 15 分钟）。
+
+**引擎同步（2026-11-15）**：本地版后续优化（碎片作用域脉冲、Fate 偏好去
+重复、Stem 场 Fate 触发、Tile 时钟碎片窗口、快照去重、被动 Fate QA）已
+同步部署到本服务器版本，引擎源码同步件见 [`engine/`](engine/README.md)；
+新旧引擎门禁结果逐项一致（OVERALL PASS）。
 
 按较新的 `valhalla-unified-core`（2026-07）模式部署 Valhalla。桌面端和手机端不改。
 
